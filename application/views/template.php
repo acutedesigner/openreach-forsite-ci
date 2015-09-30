@@ -1,0 +1,4 @@
+<?= $header ?>
+<?= $content ?>
+<?= $sidebar ?>
+<?= $footer ?>
