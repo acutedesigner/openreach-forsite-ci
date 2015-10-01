@@ -20,7 +20,7 @@
 		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 		  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 		
-		  ga('create', 'UA-64957466-1', 'auto');
+		  ga('create', 'UA-XXXXXX', 'auto');
 		  ga('send', 'pageview');
 		</script>
 -->
@@ -40,15 +40,16 @@
 
 					<ul>
 						<li>
-						<img class="openreach-logo" src="<?php echo $this->template_url; ?>img/openreach-logo-header.jpg" srcset="<?php echo $this->template_url; ?>img/openreach-logo-header.jpg 1x, <?php echo $this->template_url; ?>img/openreach-logo-header-2x.jpg 2x" alt="Openreach Logo" ></li>
+						<a href="http://www.openreach.co.uk" target="_blank"><img class="openreach-logo" src="<?php echo $this->template_url; ?>img/openreach-logo-header.jpg" srcset="<?php echo $this->template_url; ?>img/openreach-logo-header.jpg 1x, <?php echo $this->template_url; ?>img/openreach-logo-header-2x.jpg 2x" alt="Openreach Logo" ></a></li>
 						<li><div class="tab"><?php echo date('F'); ?> 2015</div></li>
 					</ul>
-					<a href="<?php echo base_url(); ?>"><img class="connected-logo" src="<?php echo $this->template_url; ?>img/connected-logo.jpg" srcset="<?php echo $this->template_url; ?>img/connected-logo.jpg 1x, <?php echo $this->template_url; ?>img/connected-logo@2x.jpg 2x" alt="Connected - Newsletter" ></a>
+					<a href="<?php echo base_url(); ?>"><img class="brand-logo" src="<?php echo $this->template_url; ?>img/forsite-logo.jpg" srcset="<?php echo $this->template_url; ?>img/forsite-logo.jpg 1x, <?php echo $this->template_url; ?>img/forsite-logo@2x.jpg 2x" >
+</a>
 				</div>
 			</header>
 			<div class="header-band">
 				<div class="container">
-					News, Views and Offers
+					NEWS AND VIEWS
 				</div>
 			</div>
 			<nav>
@@ -66,7 +67,6 @@
 									<?php endforeach; ?>
 							</ul>
 						</li>
-						<li <?php if(isset($link_currentoffers)): echo 'class="current-menu-parent"'; endif; ?> ><a href="<?php echo base_url('current-offers/'); ?>">Current Offers</a></li>
 						<?php endif; ?>
 					</ul>
 				</div>

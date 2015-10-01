@@ -37,10 +37,10 @@ class Home extends MY_Controller {
 		// get the promos
 		$this->load->model('promos_model');
 		$data['promos'] = $this->promos_model->display_promos(); 
-		$data['title'] = 'Welcome to Openreach connected'; 
+		$data['title'] = 'Welcome to Openreach ForSite'; 
 		$data['link_newsletter'] = 0;		
 				
-		$this->template->write('title', 'Welcome to Openreach Connected');
+		$this->template->write('title', 'Welcome to Openreach ForSite');
 		$this->template->write_view('header', 'template/header', $data);
 		$this->template->write_view('content', 'template/index', $data);
 		$this->template->write_view('sidebar', 'template/sidebar', $data);
@@ -53,7 +53,7 @@ class Home extends MY_Controller {
 	{
 		$data['pagetitle'] = $title;
 
-		$this->template->write('title', 'Welcome to Openreach Connected');
+		$this->template->write('title', 'Welcome to Openreach ForSite');
 		$this->template->write_view('content', 'template/index', $data);
 		$this->template->write_view('sidebar', 'template/sidebar', $data);
 		$this->template->write_view('footer', 'template/footer', $data);

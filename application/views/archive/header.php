@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Openreach - <?php echo $title ?></title>
+        <title>Openreach - ForSite archive</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -32,7 +32,8 @@
 						<img class="openreach-logo" src="<?php echo $this->template_url; ?>img/openreach-logo-header.jpg" srcset="<?php echo $this->template_url; ?>img/openreach-logo-header.jpg 1x, <?php echo $this->template_url; ?>img/openreach-logo-header-2x.jpg 2x" alt="Openreach Logo" ></li>
 						<li><div class="tab"><?php echo $edition_title; ?></div></li>
 					</ul>
-					<a href="<?php echo base_url(); ?>"><img class="connected-logo" src="<?php echo $this->template_url; ?>img/connected-logo.jpg" srcset="<?php echo $this->template_url; ?>img/connected-logo.jpg 1x, <?php echo $this->template_url; ?>img/connected-logo@2x.jpg 2x" alt="Connected - Newsletter" ></a>
+					<a href="<?php echo base_url(); ?>"><img class="brand-logo" src="<?php echo $this->template_url; ?>img/forsite-logo.jpg" srcset="<?php echo $this->template_url; ?>img/forsite-logo.jpg 1x, <?php echo $this->template_url; ?>img/forsite-logo@2x.jpg 2x" >
+</a>
 				</div>
 			</header>
 			<div class="header-band">
@@ -68,7 +69,6 @@
 									<?php endforeach; ?>
 							</ul>
 						</li>
-						<li <?php if(isset($link_currentoffers)): echo 'class="current-menu-parent"'; endif; ?> ><a href="<?php echo base_url('archive/current-offers/'.$edition_id); ?>">Current Offers</a></li>
 						<?php endif; ?>
 					</ul>
 					

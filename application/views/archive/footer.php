@@ -1,25 +1,4 @@
-			</section>
-						
-
-			<?php if(isset($promos)): ?>
-
-			<!-- PROMOTION FEATURE ROW -->
-			<section class="container gallery">
-				<h3>Featured promotions</h3>
-
-					<?php $i = 0; foreach ($promos as $result): ?>
-						
-						<?php $desktop = ($result->promoid == 3 ? 'class="last-promo-desktop"' : false);  ?>			
-						<?php $tablet = ($result->promoid == 4 ? 'class="last-promo-tablet"' : false);  ?>			
-						<a <?php echo $desktop; echo $tablet; ?> href="<?php echo $result->promo_link; ?>" target="_blank">
-							<img src="<?php echo base_url('media').'/'.$result->filename.$result->ext; ?>" alt="<?php echo $result->promo_title; ?>">
-						</a>
-				
-					<?php $i++; endforeach; ?>
-
-			</section>			
-			<?php endif; ?>
-									
+			</section>									
 	
 			<div class="push"></div>
 		</div>

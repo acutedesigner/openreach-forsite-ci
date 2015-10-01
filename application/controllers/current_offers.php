@@ -32,9 +32,9 @@ class Current_offers extends MY_Controller {
 		// get the promos
 		$this->load->model('promos_model');
 		$data['promos'] = $this->promos_model->display_promos();
-		$data['title'] = 'Welcome to Openreach connected'; 
+		$data['title'] = 'Welcome to Openreach ForSite'; 
 
-		$this->template->write('title', 'Welcome to Openreach connected');
+		$this->template->write('title', 'Welcome to Openreach ForSite');
 		$this->template->write_view('header', 'template/header', $data);
 		$this->template->write_view('content', 'template/page-current-offers', $data);
 		$this->template->write_view('sidebar', 'template/sidebar', $data);
