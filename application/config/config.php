@@ -14,8 +14,8 @@
 | path to your installation.
 |
 */
-$config['base_url']	= 'http://php-lamp-104185.nitrousapp.com/connected-ci/';
-$config['template_url']	= 'http://php-lamp-104185.nitrousapp.com/connected-ci/template_assets/';
+$config['base_url']	= 'http://www.openreach-forsite.co.uk/';
+$config['template_url']	= 'http://www.openreach-forsite.co.uk/template_assets/';
 
 /*
 |--------------------------------------------------------------------------

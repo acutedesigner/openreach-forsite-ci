@@ -48,9 +48,9 @@ $active_group = 'default';
 $active_record = TRUE;
 
 $db['default']['hostname'] = 'localhost';
-$db['default']['username'] = 'root';
-$db['default']['password'] = '';
-$db['default']['database'] = 'newsbyte';
+$db['default']['username'] = 'forsite_2015';
+$db['default']['password'] = 'biV1eb4du3aB2';
+$db['default']['database'] = 'forsite_2015';
 $db['default']['dbdriver'] = 'mysql';
 $db['default']['dbprefix'] = '';
 $db['default']['pconnect'] = TRUE;
