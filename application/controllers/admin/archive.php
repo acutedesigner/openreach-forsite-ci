@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Archive extends CI_Controller {
+class Archive extends MY_Admin_Controller {
 
 	// Setup CRUD
 	function __construct()
@@ -21,21 +21,6 @@ class Archive extends CI_Controller {
 			$data['failed'] = "You are not logged in. Please login";
 			redirect('admin/login');
 		}
-	}
-
-	function load_js()
-	{
-		// Add Javascript files
-		$this->jload->add('jquery-1.8.3.min.js');
-		$this->jload->add('jquery-ui-1.8.2.custom.min.js');
-		$this->jload->add('menu.js');
-		$this->jload->add('redactor/redactor.js');
-		$this->jload->add('redactor/plugins/table.js');
-		$this->jload->add('redactor/plugins/addblockquote.js');
-		$this->jload->add('redactor/plugins/imagemanager.js');
-		$this->jload->add('redactor/plugins/filemanager.js');
-
-		return $this->jload->generate();		
 	}
 
 	// AKA retrieve

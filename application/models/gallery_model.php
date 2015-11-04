@@ -1,6 +1,6 @@
 <?php
 
-class gallery_model Extends MY_Model{
+class gallery_model Extends CI_Model{
 	
 	function get_galleries($num, $offset)
 	{
@@ -34,7 +34,7 @@ class gallery_model Extends MY_Model{
 		}
 	}
 
-	function get_gallery_images($num, $offset, $id = NULL, $gallery_name = NULL)
+	function get_gallery_images($num, $offset, $id = NULL, $gallery_name = NULL, $current_lightbox_table)
 	{
 
 		/*
@@ -51,19 +51,19 @@ class gallery_model Extends MY_Model{
 		{		
 			$this->db->select('image_id, caption, galleries.friendly_name');
 			//$this->db->select('gallery_id, media.id, filename, ext, caption, display_name, cropped, filetype');
-			$this->db->from($this->current_lightbox_table);
-			$this->db->join('media', $this->current_lightbox_table.'.image_id = media.id', 'left');
-			$this->db->join('galleries', $this->current_lightbox_table.'.gallery_id = galleries.id', 'left');
+			$this->db->from($current_lightbox_table);
+			$this->db->join('media', $current_lightbox_table.'.image_id = media.id', 'left');
+			$this->db->join('galleries', $current_lightbox_table.'.gallery_id = galleries.id', 'left');
 			$this->db->where('galleries.friendly_name', $gallery_name);
 		}
 				
 		if($id != NULL)
 		{		
 			$this->db->select('gallery_id, media.id, filename, ext, caption, display_name, cropped, filetype');
-			$this->db->from($this->current_lightbox_table);
-			$this->db->where($this->current_lightbox_table.'.gallery_id', $id);
-			$this->db->join('media', $this->current_lightbox_table.'.image_id = media.id', 'left');
-			$this->db->order_by($this->current_lightbox_table.'.id', "desc");
+			$this->db->from($current_lightbox_table);
+			$this->db->where($current_lightbox_table.'.gallery_id', $id);
+			$this->db->join('media', $current_lightbox_table.'.image_id = media.id', 'left');
+			$this->db->order_by($current_lightbox_table.'.id', "desc");
 			$this->db->limit($num, $offset);
 		}
 
@@ -101,7 +101,7 @@ class gallery_model Extends MY_Model{
 		}
 	}
 	
-	function delete_galleries($data)
+	function delete_galleries($data, $current_lightbox_table)
 	{
 
 		foreach ($data as $id)
@@ -110,15 +110,15 @@ class gallery_model Extends MY_Model{
 			if($query = $this->db->delete('galleries'))
 			{
 				$this->db->where('gallery_id', $id);
-				$this->db->delete($this->current_lightbox_table);
+				$this->db->delete($current_lightbox_table);
 			}			
 		}		
 		return true;
 	}
 
-	function insert_image($data)
+	function insert_image($data, $current_lightbox_table)
 	{
-		$q = $this->db->insert($this->current_lightbox_table, $data);
+		$q = $this->db->insert($current_lightbox_table, $data);
 		
 		if($q)
 		{
@@ -126,11 +126,11 @@ class gallery_model Extends MY_Model{
 		}
 	}
 
-	function remove_image($image_id, $gallery_id)
+	function remove_image($image_id, $gallery_id, $current_lightbox_table)
 	{
 		$this->db->where('image_id', $image_id);
 		$this->db->where('gallery_id', $gallery_id);
-		$q = $this->db->delete($this->current_lightbox_table);
+		$q = $this->db->delete($current_lightbox_table);
 		
 		if($q)
 		{

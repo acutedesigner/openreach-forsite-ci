@@ -21,7 +21,8 @@
 <?php foreach( $editions as $edition ): ?>
 		<tr>
 			<td><p><?php echo anchor('admin/archive/create/'.$edition->edition_id, $edition->edition_title); ?></p></td>
-			<td><p><?php echo ($edition->status == 0 ? "Deactivated" : "Activated");  ?></p></td>
+			<?php $status = array( 'Deactivated','Live', 'Draft'); ?>
+			<td><p><?php echo $status[$edition->status]; ?></p></td>
 		</tr>
 <?php endforeach; ?>
 	</tbody>

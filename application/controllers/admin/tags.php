@@ -9,7 +9,6 @@ class Tags extends CI_Controller {
 		parent::__construct();
 		$this->is_logged_in();
 		$this->load->model('tags_model');
- 		$this->output->enable_profiler();		
 		// To show messages make sure this is installed
 		// http://getsparks.org/packages/message/versions/HEAD/show
     }

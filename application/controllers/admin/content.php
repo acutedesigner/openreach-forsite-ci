@@ -6,31 +6,13 @@ class Content extends MY_Admin_Controller{
 	function __construct()
 	{
 		parent::__construct();
-		$this->load->model('MPTtree');
-		$this->MPTtree->set_table($this->current_content_table);
-// 		$this->output->enable_profiler(TRUE);
-
-	}
-
-	function load_js()
-	{
-		// Add Javascript files
-		$this->jload->add('jquery-1.8.3.min.js');
-		$this->jload->add('jquery-ui-1.8.2.custom.min.js');
-		$this->jload->add('menu.js');
-		$this->jload->add('redactor/redactor.js');
-		$this->jload->add('redactor/plugins/table.js');
-		$this->jload->add('redactor/plugins/addblockquote.js');
-		$this->jload->add('redactor/plugins/imagemanager.js');
-		$this->jload->add('redactor/plugins/filemanager.js');
-
-		return $this->jload->generate();		
+		//$this->output->enable_profiler(TRUE);
 	}
 	
 	function index()
 	{
 		$data['title'] = 'Manage website content';
-		$data['javascript'] = $this->jload->generate();
+		$data['javascript'] = $this->load_js();
 		$data['info'] = "Please select a option from the menu";
 		$this->load->view('admin/content/content', $data);
 	}
@@ -39,7 +21,7 @@ class Content extends MY_Admin_Controller{
 	{
 		if($this->uri->segment(4) == null)
 		{
-			$data['javascript'] = $this->jload->generate();
+			$data['javascript'] = $this->load_js();
 			$this->load->view('admin/content/content', $data);
 		}
 
@@ -61,20 +43,20 @@ class Content extends MY_Admin_Controller{
 
 		$this->pagination->initialize($config);
 
-		if($query = $this->content_model->get_content($config['per_page'], $this->uri->segment(5), $this->uri->segment(4)))
+		if($query = $this->content_model->get_content($config['per_page'], $this->uri->segment(5), $this->uri->segment(4), $this->current_content_table))
 			//if($query = $this->MPTtree->get_children($root['lft'],$root['rgt']))
 			{
 			// For the sidemenu
 			$data[$this->uri->segment(4)] = 'style="display: block;"';
 			$data['pages'] = $query;
-			$data['javascript'] = $this->jload->generate();
+			$data['javascript'] = $this->load_js();
 			$data['title'] = 'Manage '.$this->uri->segment(4);
 			$this->load->view('admin/content/content', $data);
 		}
 		else
 		{
 			$data[$this->uri->segment(4)] = 'style="display: block;"';
-			$data['javascript'] = $this->jload->generate();
+			$data['javascript'] = $this->load_js();
 			$data['error'] = "There are no items in this category";
 			$data['title'] = 'Manage '.$this->uri->segment(4);
 			$this->load->view('admin/content/content', $data);
@@ -83,9 +65,22 @@ class Content extends MY_Admin_Controller{
 
 	function tree($page_type = null)
 	{
-		$this->MPTtree->get_root();
-		$this->db->where('type','page');
-		$tree = $this->MPTtree->tree2array();
+		
+		if($this->current_content_table != NULL)
+		{
+			$this->MPTtree->get_root();
+			$this->db->where('type','page');
+			$tree = $this->MPTtree->tree2array();
+			$data[$this->uri->segment(4)] = 'style="display: block;"';
+
+			$data['children'] = $tree;
+			$data['title'] = 'Manage '.$this->edition_title.' edition';
+		}
+		else
+		{
+			$data['title'] = 'Whoops!';
+			$this->message->set('success','You have no Editons in draft mode');			
+		}
 
 		$this->jload->add('jquery-1.6.2.min.js');
 		$this->jload->add('jquery-ui-1.8.2.custom.min.js');
@@ -93,10 +88,7 @@ class Content extends MY_Admin_Controller{
 		$this->jload->add('jConfirmAction/jconfirmaction.jquery.js');
 		$this->jload->add('cms_tree.js');
 
-		$data[$this->uri->segment(4)] = 'style="display: block;"';
-		$data['children'] = $tree;
-		$data['javascript'] = $this->jload->generate();
-		$data['title'] = 'Manage '.$this->edition_title.' edition';
+		$data['javascript'] = $this->load_js();
 		$this->load->view('admin/content/content', $data);
 	}
 
@@ -150,7 +142,7 @@ class Content extends MY_Admin_Controller{
 		// Get the header images gallery list
 		$this->load->model('gallery_model');
 		
-		if($header_images = $this->gallery_model->get_gallery_images(0,100,NULL,'header-images'))
+		if($header_images = $this->gallery_model->get_gallery_images(0,100,NULL,'header-images', $this->current_lightbox_table))
 		{
 			$images_array = array('' => 'Select One...');
 			
@@ -221,7 +213,7 @@ class Content extends MY_Admin_Controller{
 		$this->load->model('content_model');
 		$this->load->model('users_model');
 
-		if($form = $this->content_model->get_page($this->uri->segment(5)))
+		if($form = $this->content_model->get_page($this->uri->segment(5), $this->current_content_table))
 		{
 			// Get the page hirarachy tree
 			//$tree = $this->MPTtree->tree2array();
@@ -233,6 +225,7 @@ class Content extends MY_Admin_Controller{
 
 			// Getting a list of Authors
 			$users = $this->users_model->get_all_users();
+
 			
 			// Add them to the view data
 			$data = array(
@@ -261,7 +254,7 @@ class Content extends MY_Admin_Controller{
 			// Get the header images gallery list
 			$this->load->model('gallery_model');
 			
-			if($header_images = $this->gallery_model->get_gallery_images(0,100,NULL,'header-images'))
+			if($header_images = $this->gallery_model->get_gallery_images(0,100,NULL,'header-images', $this->current_lightbox_table))
 			{
 				$images_array = array('' => 'Select One...');
 				
@@ -353,20 +346,22 @@ class Content extends MY_Admin_Controller{
 				'header_image' => $this->input->post('header_image'),
 				'type' => $this->input->post('type'),
 				'date_created' => $this->input->post('date_created') ,
-				'nested' => $this->input->post('nested')
+				'nested' => $this->input->post('nested'),
 			);
 
 			$this->load->model('content_model');
 
+
 			if($this->input->post('id'))
 			{
 				$post['last_edited'] = date('Y-m-d H:m:s');
+				print_r($this->input->post());
 
 				//if($form = $this->content_model->update_page($post, $this->input->post('id')))
 				if($form = $this->MPTtree->update_node($this->input->post('lft'), $post))
 				{
 					// Move the page to new position if changed
-					if($this->input->post('lft') == $this->input->post('position'))
+					if($this->input->post('lft') != $this->input->post('position'))
 					{
 						$this->MPTtree->move_node_append($this->input->post('lft'),$this->input->post('position'));
 					}
@@ -385,6 +380,8 @@ class Content extends MY_Admin_Controller{
 			{
 				$post['date_created'] = date('Y-m-d H:m:s');
 				$post['last_edited'] = date('Y-m-d H:m:s');
+
+				print_r($this->input->post());
 
 				//if($form = $this->content_model->insert_page($post))
 				if($form = $this->MPTtree->append_node_last($this->input->post('position'), $post))
@@ -494,7 +491,7 @@ class Content extends MY_Admin_Controller{
 			'status' => $status
 		);
 
-		if($this->content_model->status_update($status, $this->uri->segment(5)))
+		if($this->content_model->status_update($status, $this->uri->segment(5), $this->current_content_table))
 		{
 
 			$data['status'] = $status['status'];
@@ -515,16 +512,16 @@ class Content extends MY_Admin_Controller{
 		if($post = $this->input->post('checkbox'))
 		{
 			//delete multiple pages
-			if($form = $this->content_model->delete_pages($post))
+			if($form = $this->content_model->delete_pages($post, $this->current_content_table))
 			{
 				redirect('admin/content/table/'.$this->uri->segment(4));
 			}
-			elseif($form = $this->content_model->delete_pages($id))
+			elseif($form = $this->content_model->delete_pages($id, $this->current_content_table))
 			{
 				redirect('admin/content/table/'.$this->uri->segment(4));
 			}
 		}
-		elseif($form = $this->content_model->delete_page($this->uri->segment(5)))
+		elseif($form = $this->content_model->delete_page($this->uri->segment(5), $this->current_content_table))
 		{
 			// delete single page
 			redirect('admin/content/tree/'.$this->uri->segment(4));

@@ -89,7 +89,7 @@ class Promos extends CI_Controller {
 		// Get the promo gallery list
 		$this->load->model('gallery_model');
 		
-		if($promo_offers = $this->gallery_model->get_gallery_images(0,100,NULL,'promotional-offers'))
+		if($promo_offers = $this->gallery_model->get_gallery_images(0,100,NULL,'promotional-offers', NULL, $this->current_lightbox_table))
 		{
 			$images_array = array('' => 'Select One...');
 			
@@ -171,7 +171,7 @@ class Promos extends CI_Controller {
 			// Get the promo gallery list
 			$this->load->model('gallery_model');
 			
-			if($promo_offers = $this->gallery_model->get_gallery_images(0,100,NULL,'promotional-offers'))
+			if($promo_offers = $this->gallery_model->get_gallery_images(0,100,NULL,'promotional-offers', NULL, $this->current_lightbox_table))
 			{
 				$images_array = array('' => 'Select One...');
 				

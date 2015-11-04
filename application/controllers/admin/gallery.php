@@ -173,7 +173,7 @@ class Gallery extends MY_Admin_Controller{
 
 			$this->load->model('gallery_model');
 
-			if($form = $this->gallery_model->delete_galleries($post))
+			if($form = $this->gallery_model->delete_galleries($post, $this->current_lightbox_table))
 			{
 				redirect('admin/gallery');
 			}
@@ -208,7 +208,7 @@ class Gallery extends MY_Admin_Controller{
 
 		$this->pagination->initialize($config);
 				
-		if($query = $this->gallery_model->get_gallery_images($config['per_page'], $this->uri->segment(5), $id))
+		if($query = $this->gallery_model->get_gallery_images($config['per_page'], $this->uri->segment(5), $id, NULL, $this->current_lightbox_table))
 		{
 			// Get gallery title
 			$title = $this->gallery_model->get_gallery($id);
@@ -256,7 +256,7 @@ class Gallery extends MY_Admin_Controller{
 				'gallery_id' => $this->input->post('gallery_id')
 			);
 
-			if($query = $this->gallery_model->insert_image($post))
+			if($query = $this->gallery_model->insert_image($post, $this->current_lightbox_table))
 			{
 				$data['messages'] = array('Your image has been added to the gallery');
 				$this->load->view('admin/messages/success_view',$data);
@@ -288,7 +288,7 @@ class Gallery extends MY_Admin_Controller{
 
 		$this->load->model('gallery_model');
 
-		if($query = $this->gallery_model->remove_image($image_id,$this->uri->segment(5)))
+		if($query = $this->gallery_model->remove_image($image_id,$this->uri->segment(5), $this->current_lightbox_table))
 		{
 			$this->message->set('success', 'Image has been removed from the gallery');
 			redirect('admin/gallery/view/'.$this->uri->segment(5));			
