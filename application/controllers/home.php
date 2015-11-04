@@ -13,22 +13,22 @@ class Home extends MY_Controller {
 		$this->load->model('content_model');
 
 		//Get data for sidebar articles	and offers	
-		$newsletter_parent = $this->content_model->get_page_title('newsletter-articles');
-		$offers_parent = $this->content_model->get_page_title('current-offers');
+		$newsletter_parent = $this->content_model->get_page_title('newsletter-articles', $this->current_content_table);
+		$offers_parent = $this->content_model->get_page_title('current-offers', $this->current_content_table);
 				
-		$data['sidebar_articles'] = $this->content_model->get_sidebar($newsletter_parent->lft,$newsletter_parent->rgt);
+		$data['sidebar_articles'] = $this->content_model->get_sidebar($newsletter_parent->lft,$newsletter_parent->rgt, $this->current_content_table);
 		$data['sidebar_offers'] = $this->MPTtree->get_descendants($offers_parent->lft,$offers_parent->rgt);
 
 		//Get the menus
-		$news_articles_menu = $this->content_model->get_menu('newsletter-articles');
+		$news_articles_menu = $this->content_model->get_menu('newsletter-articles', $this->current_content_table);
 
 		$data['news_menu'] = $news_articles_menu;
 		
-		$footer_menu = $this->content_model->get_menu('footer-links');
+		$footer_menu = $this->content_model->get_menu('footer-links', $this->current_content_table);
 		$data['footer_menu'] = $footer_menu;
 		
 		// Get a page from the news_menu array
-		if($query = $this->content_model->get_page_title($news_articles_menu[0]->friendly_title))
+		if($query = $this->content_model->get_page_title($news_articles_menu[0]->friendly_title, $this->current_content_table))
 		{			
 			$data['current_article'] = $query->id;				
 			$data['page'] = $query;

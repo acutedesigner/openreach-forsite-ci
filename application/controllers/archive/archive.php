@@ -54,8 +54,8 @@ class Archive extends MY_Controller {
 		$newsletter_parent = $this->content_model->get_page_title('newsletter-articles', $this->current_content_table);
 		$offers_parent = $this->content_model->get_page_title('current-offers', $this->current_content_table);
 				
-		$data['sidebar_articles'] = $this->content_model->get_sidebar($newsletter_parent->lft,$newsletter_parent->rgt);
-		$data['sidebar_offers'] = $this->MPTtree->get_descendants($offers_parent->lft,$offers_parent->rgt);
+		$data['sidebar_articles'] = $this->content_model->get_sidebar($newsletter_parent->lft,$newsletter_parent->rgt,$this->current_content_table);
+		$data['sidebar_offers'] = $this->MPTtree->get_descendants($offers_parent->lft,$offers_parent->rgt,$this->current_content_table);
 
 		//Get the menus
 		$news_articles_menu = $this->content_model->get_menu('newsletter-articles', $this->current_content_table);

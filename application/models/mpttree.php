@@ -417,7 +417,8 @@ class MPTtree extends CI_Model{
 		$query = $this->db->get_where($this->tree_table,array($this->left_col => $lft),1);
 		$return = $query->num_rows() ? $query->row_array() : false;
 		if(!$return)
-			$this->debug_message('Node with '.$this->left_col.' '.$lft.' was not found.');
+			$message = 'Node with '.$this->left_col.' '.$lft.' was not found.';
+			$this->debug_message($message);
 		return $return;
 	}
 	

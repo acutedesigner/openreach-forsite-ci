@@ -20,6 +20,7 @@
 <?php
 	
 	$options = array(
+                '2'	=>	'Draft Edition',
                 '0'	=>	'De-activated',
                 '1'	=>	'Activated Edition'
 			);

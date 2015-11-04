@@ -6,6 +6,8 @@
 
 <h1><?php echo $title; ?></h1>
 
+<?php if ($this->message->display('success')): echo '<p class="success">'.$this->message->display('success').'</p>'; endif; ?>
+
 <!-- Display the stored data here -->
 <?php if(isset($pages)): ?>
 <?php echo form_open('admin/content/delete/'.$this->uri->segment(4)); ?>
@@ -54,10 +56,10 @@
 <?php } ?>
 
 <?php
-	function display_tree($array)
+	function display_tree($children)
 	{
 		$root = NULL;
-		foreach($array as $child)
+		foreach($children as $child)
 		{
 			$no_nest = ($child['nested'] == 0 ? "no-nest" : false);
 			$root = ($child['lft'] == 1 ? "ignore" : false);

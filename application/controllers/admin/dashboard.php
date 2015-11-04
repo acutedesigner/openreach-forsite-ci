@@ -1,13 +1,12 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class dashboard Extends CI_Controller{
+class dashboard Extends MY_Admin_Controller{
 	
 	// Check that the user is always logged in
 	function __construct()
 	{
 		parent::__construct();
 		$this->is_logged_in();		
-		$this->jload->add('menu.js');
 	}
 	
 	function is_logged_in()
@@ -24,7 +23,7 @@ class dashboard Extends CI_Controller{
 
 	function index()
 	{
-		$data['javascript'] = $this->jload->generate();
+		$data['javascript'] = $this->load_js();
 		$this->load->view('admin/dashboard', $data);
 	}
 

@@ -87,7 +87,8 @@ class Archive_model extends CI_Model {
 		$data = array(
 		               'status' => 0
 		            );
-		
+
+		$this->db->where('status', 1);		
 		$q = $this->db->update('archive', $data);
 		
 		if($q)
@@ -114,10 +115,10 @@ class Archive_model extends CI_Model {
 		}
 	}
 	
-	function get_active_label()
+	function get_active_label($status = 1)
 	{
 		$this->db->select('edition_label, edition_title');
-		$this->db->where('status', 1);
+		$this->db->where('status', $status);
 		
 		$q = $this->db->get('archive');
 		
