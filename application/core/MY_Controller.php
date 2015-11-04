@@ -14,13 +14,7 @@ class MY_Controller extends CI_Controller
 	{
 		parent::__construct();
 
-
-/*
-		if($this->uri->segment(1) != 'archive')
-		{
-*/
-			$this->get_edition_label();
-// 		}
+		$this->get_edition_label();
 		
 		$this->load->model('MPTtree');
 		$this->MPTtree->set_table($this->current_content_table);
@@ -105,7 +99,7 @@ class MY_Controller extends CI_Controller
 		}
 		else
 		{
-			show_error('An edition of the Newsletter is not active!');
+			return 'An edition of the Newsletter is not active!';
 		}
 	}
 

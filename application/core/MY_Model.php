@@ -25,7 +25,7 @@ class MY_Model extends CI_Model
 		}
 		else
 		{
-			show_error('An edition of the Newsletter is not active!');
+			return 'An edition of the Newsletter is not active!';
 		}
 	}
 	

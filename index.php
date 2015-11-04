@@ -23,7 +23,6 @@
 	} else {
 	    define('ENVIRONMENT', 'production');
 	}
-
 /*
  *---------------------------------------------------------------
  * ERROR REPORTING
