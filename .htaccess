@@ -6,7 +6,7 @@
   #  http://www.example.com/mypage/test1
   # then use
   # RewriteBase /mypage/test1/
-  RewriteBase /
+  RewriteBase /openreach-forsite-ci/
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule ^(.*)$ index.php?/$1 [L]
@@ -15,7 +15,7 @@
 php_flag display_startup_errors off
 php_flag display_errors off
 php_flag html_errors off
-  
+
 # enable PHP error logging
 php_flag  log_errors on
 php_value error_log  /home/nitrous/www/PHP_errors.log
