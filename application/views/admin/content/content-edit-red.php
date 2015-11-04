@@ -114,30 +114,14 @@
 </div>
 
 <script type="text/javascript">
-$(function()
-{
-    $('#content').redactor({
-	    fileUpload: '<?php echo site_url('admin/upload/upload_files/content');?>',
-        fileManagerJson: '<?php echo site_url('admin/media/filesjson/files');?>',
-	    imageUpload: '<?php echo site_url('admin/upload/upload_files/content');?>',
-		imageManagerJson: '<?php echo site_url('admin/media/filesjson/images');?>',
-        plugins: ['imagemanager','filemanager','addblockquote','table'],
-        pastePlainText: true,
-        cleanOnPaste: true,
-        paragraphize: false,
-        replaceDivs: false,
-        formattingAdd: [
-	        {
-	            tag: 'small',
-	            title: 'small'
-	        },
-	        {
-		        tag: 'div',
-		        title: 'Logo box',
-		        class: 'logo-box'
-	        }
-        ]
-    });
+tinymce.init({
+    selector: "#content",
+    plugins: [
+        "advlist autolink lists link image charmap print preview anchor",
+        "searchreplace visualblocks code fullscreen",
+        "insertdatetime media table contextmenu paste"
+    ],
+    toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
 });
 </script>
 <script type="text/javascript">

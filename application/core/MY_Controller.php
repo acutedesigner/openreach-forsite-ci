@@ -139,11 +139,7 @@ class MY_Admin_Controller extends CI_Controller
 		$this->jload->add('jquery-1.8.3.min.js');
 		$this->jload->add('jquery-ui-1.8.2.custom.min.js');
 		$this->jload->add('menu.js');
-		$this->jload->add('redactor/redactor.js');
-		$this->jload->add('redactor/plugins/table.js');
-		$this->jload->add('redactor/plugins/addblockquote.js');
-		$this->jload->add('redactor/plugins/imagemanager.js');
-		$this->jload->add('redactor/plugins/filemanager.js');
+		$this->jload->add('tinymce/tinymce.min.js');
 
 		return $this->jload->generate();		
 	}
