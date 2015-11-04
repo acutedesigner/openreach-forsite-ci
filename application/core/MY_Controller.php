@@ -140,6 +140,9 @@ class MY_Admin_Controller extends CI_Controller
 		$this->jload->add('jquery-ui-1.8.2.custom.min.js');
 		$this->jload->add('menu.js');
 		$this->jload->add('tinymce/tinymce.min.js');
+		$this->jload->add('jquery.ui.nestedSortable.js');
+		$this->jload->add('jConfirmAction/jconfirmaction.jquery.js');
+		$this->jload->add('cms_tree.js');
 
 		return $this->jload->generate();		
 	}

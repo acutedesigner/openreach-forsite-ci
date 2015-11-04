@@ -88,7 +88,7 @@ class Content extends MY_Admin_Controller{
 		$this->jload->add('jConfirmAction/jconfirmaction.jquery.js');
 		$this->jload->add('cms_tree.js');
 
-		$data['javascript'] = $this->load_js();
+		$data['javascript'] = $this->jload->generate();
 		$this->load->view('admin/content/content', $data);
 	}
 
