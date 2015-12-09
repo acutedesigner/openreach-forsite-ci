@@ -38,7 +38,7 @@
 |
 */
 
-$route['default_controller'] = "home";
+$route['default_controller'] = "content";
 $route['404_override'] = '';
 
 $route['admin'] = 'admin/login';
@@ -58,9 +58,6 @@ $route['contact/(:any)'] = '/contact/$1';
 */
 
 $route['current-offers'] = 'current_offers/index';
-
-$route['newtree'] = 'newtree/index';
-
 
 $route['^(?!admin|archive|media|news|gallery|blog).*'] = "content/index/$0";
 /* End of file routes.php */

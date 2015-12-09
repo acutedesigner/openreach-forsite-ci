@@ -13,13 +13,7 @@ class MY_Controller extends CI_Controller
 	function __construct()
 	{
 		parent::__construct();
-
-		$this->get_edition_label();
 		
-		$this->load->model('MPTtree');
-
-		$this->MPTtree->set_table($this->current_content_table);
-
 		$this->load->helper('text');
 		
 

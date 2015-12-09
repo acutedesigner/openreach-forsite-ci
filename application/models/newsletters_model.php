@@ -22,7 +22,7 @@ class Newsletters_model Extends CI_Model{
 	{
 		$this->db->select('id, title, status');
         $this->db->from($this->newsletter_table);
-		$this->db->where('type', 'newsletter');
+		$this->db->where('type', 'newsletters');
 		$this->db->order_by('id', 'desc');
 		// $this->db->limit($num, $offset);
 		$q = $this->db->get();		
@@ -44,11 +44,28 @@ class Newsletters_model Extends CI_Model{
 	 */
 	public function get_nl($id)
 	{
-		$this->db->select('id, title, status');
+		$this->db->select('id, title, status, issue');
         $this->db->from($this->newsletter_table);
 		$this->db->where('id', $id);
 		$q = $this->db->get();		
 
+		if($q->num_rows() == 1)
+		{
+			return $q->row();
+		}
+
+	}
+
+	public function get_latest_nl()
+	{
+		$this->db->select('id, title, status, issue');
+        $this->db->from($this->newsletter_table);
+		$this->db->where('type', 'newsletters');
+		$this->db->where('status', 1);
+		$this->db->order_by('id', 'desc');
+		$this->db->limit(1, 0);
+		$q = $this->db->get();		
+ 
 		if($q->num_rows() == 1)
 		{
 			return $q->row();
@@ -123,9 +140,19 @@ class Newsletters_model Extends CI_Model{
 		return $this->db->count_all_results() + 1;
 	}
 
+	public function get_issue($issue)
+	{
+		return $this->nested_set->getNodeWhere('issue = '.$issue);				
+	}
+
+	public function get_first_child($parent_node)
+	{
+		return (object)$this->nested_set->getFirstChild($parent_node);
+	}
+
 	public function get_children($parent_id)
 	{
-			return $this->nested_set->getNodesWhere('parent_id = '.$parent_id);		
+		return $this->nested_set->getNodesWhere('parent_id = '.$parent_id);		
 	}
 
 	public function add_child()

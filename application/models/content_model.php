@@ -154,20 +154,20 @@ class content_model Extends CI_Model{
 	}
 
 	//function get_page_title($page_title, $new_table = NULL, $current_content_table)
-	function get_page_title($page_title, $current_content_table)
+	function get_page_title($page_title)
 	{
 		// if($new_table != NULL)
 		// {
 		// 	$current_content_table = $new_table;	
 		// }
 		
-		$this->db->select($current_content_table.'.id, title, friendly_title, content, status, '.$current_content_table.'.date_created, type, userid, users.firstname, users.lastname, gallery, header_image, lft, rgt, filename, ext, tag_name');
-		$this->db->from($current_content_table);
+		$this->db->select($this->content_table.'.id, title, friendly_title, content, status, '.$this->content_table.'.date_created, type, userid, users.firstname, users.lastname, gallery, header_image, lft, rgt, filename, ext, tag_name');
+		$this->db->from($this->content_table);
 		$this->db->where('friendly_title', $page_title);
-		$this->db->join('users', 'userid = '.$current_content_table.'.author', 'left');
+		$this->db->join('users', 'userid = '.$this->content_table.'.author', 'left');
 		//LEFT JOIN media ON content.header_image = media.id
-		$this->db->join('media', $current_content_table.'.header_image = media.id', 'left');
-		$this->db->join('tags', $current_content_table.'.tag_id = tags.id', 'left');
+		$this->db->join('media', $this->content_table.'.header_image = media.id', 'left');
+		$this->db->join('tags', $this->content_table.'.tag_id = tags.id', 'left');
 
 		$q = $this->db->get();	
 

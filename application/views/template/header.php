@@ -61,8 +61,8 @@
 							<a href="<?php echo base_url(); ?>">Newsletter Articles</a>
 							<ul>
 									<?php foreach ($news_menu as $result): ?>
-
-										<li><a href="<?php echo base_url($result->friendly_title); ?>"><?php echo $result->title; ?></a></li>
+									
+										<li><a href="<?php echo base_url('issue-'.$issue).'/'.$result['type'].'/'.$result['friendly_title']; ?>"><?php echo $result['title']; ?></a></li>
 
 									<?php endforeach; ?>
 							</ul>
