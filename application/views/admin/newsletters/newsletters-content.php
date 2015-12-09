@@ -14,7 +14,7 @@
 <h2>Newsletter articles</h2>
 <?php echo anchor('admin/content/create/articles/'.$articles_id, 'Create new article', 'class="button positive"'); ?>
 <ul id="pagetree">
-<?php display_tree($articles); ?>
+<?php display_tree($articles, $parent_id); ?>
 </ul>
 <?php } ?>
 
@@ -22,12 +22,12 @@
 <h2>Current Offers</h2>
 <?php echo anchor('admin/content/create/offers/'.$current_offers_id, 'Create new offer', 'class="button positive"'); ?>
 <ul id="pagetree">
-<?php display_tree($current_offers); ?>
+<?php display_tree($current_offers, $parent_id); ?>
 </ul>
 <?php } ?>
 <?php echo (isset($articles) || isset($current_offers) ? '<style>.ui-state-highlight { height: 30px; border: 1px solid #999999; background-color: #EEEEEE; margin: 0px 0px 1px 0px; } </style>' : NULL ); ?>
 <?php
-	function display_tree($children)
+	function display_tree($children, $parent_id)
 	{
 		$root = NULL;
 		foreach($children as $child)
@@ -35,7 +35,7 @@
 			$no_nest = ($child['nested'] == 0 ? "no-nest" : false);
 			$root = ($child['lft'] == 1 ? "ignore" : false);
 			$folder = (isset($child['children']) && $child['type'] != "blog" ? "ofolder" : "folder");
-			$delete = anchor('admin/content/delete/page/'.$child['lft'], '&nbsp;', 'class="delete"');
+			$delete = anchor('admin/content/delete/'.$parent_id.'/'.$child['id'], '&nbsp;', 'class="delete"');
 
 			echo "<li class=\"$root $no_nest\" id=\"".$child['lft']."\">\n";
 			echo "<div class=\"item\">".$delete."<img src='".base_url()."css/images/img-page-".$folder.".png' class='folder' />".anchor('admin/content/edit/'.$child['type'].'/'.$child['parent_id'].'/'.$child['id'], $child['title'])."</div>";

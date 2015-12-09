@@ -302,22 +302,10 @@ class Content extends MY_Admin_Controller{
 	{
 		$this->load->model('content_model');
 
-		if($post = $this->input->post('checkbox'))
-		{
-			//delete multiple pages
-			if($form = $this->content_model->delete_pages($post, $this->current_content_table))
-			{
-				redirect('admin/content/table/'.$this->uri->segment(4));
-			}
-			elseif($form = $this->content_model->delete_pages($id, $this->current_content_table))
-			{
-				redirect('admin/content/table/'.$this->uri->segment(4));
-			}
-		}
-		elseif($form = $this->content_model->delete_page($this->uri->segment(5), $this->current_content_table))
+		if($form = $this->content_model->delete_page($this->uri->segment(5)))
 		{
 			// delete single page
-			redirect('admin/content/tree/'.$this->uri->segment(4));
+			redirect('admin/newsletters/content/'.$this->uri->segment(4));
 		}
 	}
 

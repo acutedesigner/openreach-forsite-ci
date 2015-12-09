@@ -31,7 +31,6 @@ class content_model Extends CI_Model{
 	public function insert_page($data)
 	{
 		
-		print_r($data);
 		$parent = $this->nested_set->getNodeWhere('id = '.$data['parent_id']);
 		$child = $this->nested_set->appendNewChild($parent,$data);	
 		if($child)
@@ -40,15 +39,28 @@ class content_model Extends CI_Model{
 		}
 	}
 	
-	public function update_page($id, $data)
+	public function update_page($page_id, $data)
 	{
-		$this->db->where('id', $id);
+		$this->db->where('id', $page_id);
 		$q = $this->db->update($this->content_table, $data);
 		
 		if($q)
 		{
 			return true;
 		}
+	}
+
+	public function delete_page($page_id)
+	{
+		$node = $this->nested_set->getNodeWhere('id = '.$page_id);
+
+		$deleted_node = $this->nested_set->deleteNode($node);
+
+		if($deleted_node)
+		{
+			return true;
+		}
+
 	}
 
 /**--------------------------**/	
@@ -176,11 +188,11 @@ class content_model Extends CI_Model{
 		return true;
 	}
 
-	function delete_page($id)
-	{
-		$this->MPTtree->delete_node($id);
-		return true;
- 	}	
+	// function delete_page($id)
+	// {
+	// 	$this->MPTtree->delete_node($id);
+	// 	return true;
+ // 	}	
 	
 	function status_update($data, $id, $current_content_table)
 	{
