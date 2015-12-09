@@ -1,5 +1,14 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+/**
+ * File: admin/content.php
+ *
+ * A system to create and update the content articles
+ *
+ * @author Nigel M Peters @acute_designer
+ * 
+ */
+
 class Content extends MY_Admin_Controller{
 	
 	// Check that the user is always logged in
@@ -7,89 +16,6 @@ class Content extends MY_Admin_Controller{
 	{
 		parent::__construct();
 		//$this->output->enable_profiler(TRUE);
-	}
-	
-	function index()
-	{
-		$data['title'] = 'Manage website content';
-		$data['javascript'] = $this->load_js();
-		$data['info'] = "Please select a option from the menu";
-		$this->load->view('admin/content/content', $data);
-	}
-
-	function table($page_type = null)
-	{
-		if($this->uri->segment(4) == null)
-		{
-			$data['javascript'] = $this->load_js();
-			$this->load->view('admin/content/content', $data);
-		}
-
-		// Select all from database where page type = $param
-		$this->load->model('content_model');
-
-		$rows = $this->db->query('SELECT * FROM '.$this->current_content_table.' WHERE type = "'.$this->uri->segment(4).'" ');
-
-		// load pagination class
-		$this->load->library('pagination');
-		$config['base_url'] = base_url().'index.php/admin/content/view/'.$this->uri->segment(4);
-		$config['total_rows'] = $rows->num_rows()-1; //$this->db->count_all('content');
-		$config['per_page'] = '20';
-		$config['full_tag_open'] = '<div id="pagination-links">';
-		$config['full_tag_close'] = '</div>';
-		$config['cur_tag_open'] = '<li class="current">';
-		$config['cur_tag_close'] = '</li>';
-		$config['uri_segment'] = 5;
-
-		$this->pagination->initialize($config);
-
-		if($query = $this->content_model->get_content($config['per_page'], $this->uri->segment(5), $this->uri->segment(4), $this->current_content_table))
-			//if($query = $this->MPTtree->get_children($root['lft'],$root['rgt']))
-			{
-			// For the sidemenu
-			$data[$this->uri->segment(4)] = 'style="display: block;"';
-			$data['pages'] = $query;
-			$data['javascript'] = $this->load_js();
-			$data['title'] = 'Manage '.$this->uri->segment(4);
-			$this->load->view('admin/content/content', $data);
-		}
-		else
-		{
-			$data[$this->uri->segment(4)] = 'style="display: block;"';
-			$data['javascript'] = $this->load_js();
-			$data['error'] = "There are no items in this category";
-			$data['title'] = 'Manage '.$this->uri->segment(4);
-			$this->load->view('admin/content/content', $data);
-		}
-	}
-
-	function tree($page_type = null)
-	{
-		
-		if($this->current_content_table != NULL)
-		{
-			$this->MPTtree->get_root();
-			$this->db->where('type','page');
-			$tree = $this->MPTtree->tree2array();
-			$data[$this->uri->segment(4)] = 'style="display: block;"';
-
-			$data['children'] = $tree;
-			$data['title'] = 'Manage '.$this->edition_title.' edition';
-		}
-		else
-		{
-			$data['title'] = 'Whoops!';
-			$this->message->set('success','You have no Editons in draft mode');			
-		}
-
-		$this->jload->add('jquery-1.6.2.min.js');
-		$this->jload->add('jquery-ui-1.8.2.custom.min.js');
-		$this->jload->add('jquery.ui.nestedSortable.js');
-		$this->jload->add('jConfirmAction/jconfirmaction.jquery.js');
-		$this->jload->add('cms_tree.js');
-
-		$data['javascript'] = $this->jload->generate();
-		$this->load->view('admin/content/content', $data);
 	}
 
 	// Create Content
@@ -102,6 +28,7 @@ class Content extends MY_Admin_Controller{
 			'content' => NULL,
 			'status' => NULL,
 			'type' => $this->uri->segment(4),
+			'parent_id' => $this->uri->segment(5),
 			'date_created' => date("Y-m-d"),
 			'tag_id' => NULL,
 			'id' => NULL,
@@ -163,40 +90,6 @@ class Content extends MY_Admin_Controller{
 			$data['galleries'] = (object)$galleries;
 		}
 
-		if($this->uri->segment(4) == "blog")
-		{
-
-			// Get Sub pages only
-			// $toplevel = $this->db->query('SELECT * FROM content WHERE type =  "'.$this->uri->segment(4).'" ORDER BY lft ASC LIMIT 1');
-
-			$this->db->select('lft, title');
-			$this->db->from($this->current_content_table);
-			$this->db->where('type', $this->uri->segment(4));
-			$this->db->order_by("lft", "asc");
-			$this->db->limit(1, 0);
-			$toplevel = $this->db->get();
-
-			if($toplevel->num_rows() > 0)
-			{
-				$parent = $toplevel->row();
-				$data['parent'] = $parent;
-			}
-			else
-			{
-				$parent = NULL;
-			}
-		}
-
-		else
-
-		{
-			// Get the page hirarachy tree
-			$root = $this->MPTtree->get_root();
-			$tree = $this->MPTtree->get_children($root['lft'],$root['rgt']);
-			$data['children'] = $tree;
-			$data['root'] = $root;
-		}
-
 		// Load the js files
 		$data['javascript'] = $this->load_js();
 
@@ -206,33 +99,22 @@ class Content extends MY_Admin_Controller{
 		// Load the view
 		$this->load->view('admin/content/content-edit-red', $data);
 	}
+	
 
-	//Edit Content
-	function edit()
+	public function edit()
 	{
 		$this->load->model('content_model');
 		$this->load->model('users_model');
 
-		if($form = $this->content_model->get_page($this->uri->segment(5), $this->current_content_table))
+		if($form = $this->content_model->get_page($this->uri->segment(6)))
 		{
-			// Get the page hirarachy tree
-			//$tree = $this->MPTtree->tree2array();
-
-			$root = $this->MPTtree->get_root();
-			$tree = $this->MPTtree->get_children($root['lft'],$root['rgt']);
-			$node = $this->MPTtree->get_node($form->lft);
-			$parent = $this->MPTtree->get_parent($node['lft'],$node['rgt']);
 
 			// Getting a list of Authors
 			$users = $this->users_model->get_all_users();
-
 			
 			// Add them to the view data
 			$data = array(
-				'formdata' => $form,
-				'children' => $tree,
-				'root' => $root,
-				'parent' => (object)$parent
+				'formdata' => $form
 			);
 
 			// Get the tags list
@@ -249,7 +131,6 @@ class Content extends MY_Admin_Controller{
 				// Set the tags
 				$data['tags'] = $tagarray;
 			}
-
 
 			// Get the header images gallery list
 			$this->load->model('gallery_model');
@@ -314,7 +195,6 @@ class Content extends MY_Admin_Controller{
 		}
 
 	}
-
 	function save()
 	{
 
@@ -326,7 +206,6 @@ class Content extends MY_Admin_Controller{
 		$this->form_validation->set_rules('status', 'Status', 'trim|integer');
 		$this->form_validation->set_rules('gallery', 'Gallery', 'trim|integer');
 		$this->form_validation->set_rules('type', 'Type', 'trim|required');
-		$this->form_validation->set_rules('lft', 'Left', 'trim|required');
 		$this->form_validation->set_rules('date_created', 'Post Date', 'trim');
 		$this->form_validation->set_rules('id', 'id', 'trim|integer');
 		$this->form_validation->set_rules('nested', 'nested', 'trim|integer');
@@ -343,71 +222,14 @@ class Content extends MY_Admin_Controller{
 				'status' => $this->input->post('status'),
 				'tag_id' => $this->input->post('tag_id'),
 				'gallery' => $this->input->post('gallery'),
+				'parent_id' => $this->input->post('parent_id'),
 				'header_image' => $this->input->post('header_image'),
 				'type' => $this->input->post('type'),
 				'date_created' => $this->input->post('date_created') ,
 				'nested' => $this->input->post('nested'),
 			);
 
-			$this->load->model('content_model');
-
-
-			if($this->input->post('id'))
-			{
-				$post['last_edited'] = date('Y-m-d H:m:s');
-				print_r($this->input->post());
-
-				//if($form = $this->content_model->update_page($post, $this->input->post('id')))
-				if($form = $this->MPTtree->update_node($this->input->post('lft'), $post))
-				{
-					// Move the page to new position if changed
-					if($this->input->post('lft') != $this->input->post('position'))
-					{
-						$this->MPTtree->move_node_append($this->input->post('lft'),$this->input->post('position'));
-					}
-
-					// Load the js files
-					$data['javascript'] = $this->load_js();
-
-					// Set success Message
-					$this->message->set('success','Your '.$this->input->post('type').' has been saved');
-
-					// Redirect the page
-					redirect('admin/content/edit/'.$this->input->post('type').'/'.$this->input->post('id'));
-				}
-			}
-			else
-			{
-				$post['date_created'] = date('Y-m-d H:m:s');
-				$post['last_edited'] = date('Y-m-d H:m:s');
-
-				print_r($this->input->post());
-
-				//if($form = $this->content_model->insert_page($post))
-				if($form = $this->MPTtree->append_node_last($this->input->post('position'), $post))
-				{
-				
-					// Load the js files
-					$data['javascript'] = $this->load_js();
-
-					// From the MPTTree
-					$query = $this->db->query('SELECT LAST_INSERT_ID()');
-					$row = $query->row_array();
-					$form = $row['LAST_INSERT_ID()'];
-
-					// Set title Message
-					$this->message->set('success','Your '.$this->input->post('type').' has been saved');
-
-					// Redirect the page
-					redirect('admin/content/edit/'.$this->input->post('type').'/'.$form);
-				}
-				else
-				{
-					echo "Article not saved!!";
-				}
-			}
-
-			// Save Data to the database
+			$this->_save_data($post);
 
 		}
 		else
@@ -428,43 +250,14 @@ class Content extends MY_Admin_Controller{
 
 			$data['formdata'] = $postdata;
 
+			print_r($postdata);
+
 			// Load galleries
 			$this->load->model('gallery_model');
 
 			if($galleries = $this->gallery_model->get_galleries('',''))
 			{
 				$data['galleries'] = (object)$galleries;
-			}
-
-			if($this->uri->segment(4) == "blog")
-			{
-	
-				// Get Sub pages only
-				// $toplevel = $this->db->query('SELECT * FROM content WHERE type =  "'.$this->uri->segment(4).'" ORDER BY lft ASC LIMIT 1');
-	
-				$this->db->select('lft, title');
-				$this->db->from($this->current_content_table);
-				$this->db->where('type', $this->uri->segment(4));
-				$this->db->order_by("lft", "asc");
-				$this->db->limit(1, 0);
-				$toplevel = $this->db->get();
-	
-				if($toplevel->num_rows() > 0)
-				{
-					$parent = $toplevel->row();
-				}
-	
-				$data['parent'] = $parent;
-			}
-	
-			else
-	
-			{
-				// Get the page hirarachy tree
-				$root = $this->MPTtree->get_root();
-				$tree = $this->MPTtree->get_children($root['lft'],$root['rgt']);
-				$data['children'] = $tree;
-				$data['root'] = $root;
 			}
 
 			// Load the js files
@@ -546,6 +339,54 @@ class Content extends MY_Admin_Controller{
 			break;
 		}
 		//echo '{success: \'true\'}';
+	}
+
+
+	private function _save_data($formdata)
+	{
+
+		$this->load->model('content_model');
+
+		if($this->input->post('id'))
+		{
+			$formdata['last_edited'] = date('Y-m-d H:m:s');
+
+			// updating content
+			if($form = $this->content_model->update_page($this->input->post('id'), $formdata))
+			{
+				// Load the js files
+				$data['javascript'] = $this->load_js();
+
+				// Set success Message
+				$this->message->set('success','Your '.$formdata['type'].' has been updated');
+
+				// Redirect the page
+				redirect('admin/content/edit/'.$formdata['type'].'/'.$formdata['parent_id'].'/'.$this->input->post('id'));
+			}
+		}
+		else
+		{
+			//creating new content
+			$formdata['date_created'] = date('Y-m-d H:m:s');
+			$formdata['last_edited'] = date('Y-m-d H:m:s');
+
+			if($new_content_id = $this->content_model->insert_page($formdata))
+			{
+			
+				// Load the js files
+				$data['javascript'] = $this->load_js();
+
+				// Set title Message
+				$this->message->set('success','Your '.$formdata['type'].' has been saved');
+
+				// Redirect the page
+				redirect('admin/content/edit/'.$formdata['type'].'/'.$formdata['parent_id'].'/'.$new_content_id);
+			}
+			else
+			{
+				echo "Article not saved!!";
+			}
+		}		
 	}
 
 }

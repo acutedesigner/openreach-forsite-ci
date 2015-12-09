@@ -2,15 +2,57 @@
 
 class content_model Extends CI_Model{
 
+	private $content_table = 'newsletters';
+
 	function __construct()
 	{
 		parent::__construct();
-/*
-		$this->load->model('MPTtree');
-		$this->MPTtree->set_table($current_content_table);
-*/
+		$this->load->library('nested_set');
+		$this->nested_set->setControlParams($this->content_table);		
+	}
+
+
+	public function get_page($page_id)
+	{
+		$this->db->select($this->content_table.'.id, title, content, tag_id, status, '.$this->content_table.'.date_created, type, userid, nested, users.firstname, users.lastname, name, gallery, parent_id, header_image, lft');
+		$this->db->from($this->content_table);
+		$this->db->where($this->content_table.'.id', $page_id);
+		$this->db->join('users', 'userid = '.$this->content_table.'.author', 'left');
+		$this->db->join('galleries', 'galleries.id = '.$this->content_table.'.gallery', 'left');
+
+		$q = $this->db->get();	
+
+		if($q->num_rows() > 0)
+		{
+			return $q->row();
+		}
+	}
+
+	public function insert_page($data)
+	{
+		
+		print_r($data);
+		$parent = $this->nested_set->getNodeWhere('id = '.$data['parent_id']);
+		$child = $this->nested_set->appendNewChild($parent,$data);	
+		if($child)
+		{
+			return $this->db->insert_id();
+		}
 	}
 	
+	public function update_page($id, $data)
+	{
+		$this->db->where('id', $id);
+		$q = $this->db->update($this->content_table, $data);
+		
+		if($q)
+		{
+			return true;
+		}
+	}
+
+/**--------------------------**/	
+
 	function get_content($num, $offset, $page_type, $current_content_table)
 	{
 		$this->db->select('*');
@@ -31,21 +73,21 @@ class content_model Extends CI_Model{
 		}
 	}
 
-	function get_page($page_id, $current_content_table)
-	{
-		$this->db->select($current_content_table.'.id, title, content, tag_id, status, '.$current_content_table.'.date_created, type, userid, nested, users.firstname, users.lastname, name, gallery, header_image, lft');
-		$this->db->from($current_content_table);
-		$this->db->where($current_content_table.'.id', $page_id);
-		$this->db->join('users', 'userid = '.$current_content_table.'.author', 'left');
-		$this->db->join('galleries', 'galleries.id = '.$current_content_table.'.gallery', 'left');
+	// function get_page($page_id, $current_content_table)
+	// {
+	// 	$this->db->select($current_content_table.'.id, title, content, tag_id, status, '.$current_content_table.'.date_created, type, userid, nested, users.firstname, users.lastname, name, gallery, header_image, lft');
+	// 	$this->db->from($current_content_table);
+	// 	$this->db->where($current_content_table.'.id', $page_id);
+	// 	$this->db->join('users', 'userid = '.$current_content_table.'.author', 'left');
+	// 	$this->db->join('galleries', 'galleries.id = '.$current_content_table.'.gallery', 'left');
 
-		$q = $this->db->get();	
+	// 	$q = $this->db->get();	
 
-		if($q->num_rows() > 0)
-		{
-			return $q->row();
-		}
-	}
+	// 	if($q->num_rows() > 0)
+	// 	{
+	// 		return $q->row();
+	// 	}
+	// }
 
 	function get_home($current_content_table)
 	{
@@ -123,26 +165,7 @@ class content_model Extends CI_Model{
 		}
 	}
 	
-	function insert_page($data, $current_content_table)
-	{
-		$q = $this->db->insert($current_content_table, $data);
-		
-		if($q)
-		{
-			return $this->db->insert_id();
-		}
-	}
-	
-	function update_page($data, $id, $current_content_table)
-	{
-		$this->db->where('id', $id);
-		$q = $this->db->update($current_content_table, $data);
-		
-		if($q)
-		{
-			return true;
-		}
-	}
+
 	
 	function delete_pages($data)
 	{

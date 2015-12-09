@@ -13,7 +13,6 @@
  * 
  */
 
-
 class Newsletters extends MY_Admin_Controller
 {
 
@@ -98,7 +97,7 @@ class Newsletters extends MY_Admin_Controller
 				'title' => $this->input->post('title'),
 				'friendly_title' => url_title($this->input->post('title'), 'dash', TRUE),
 				'status' => $this->input->post('status'),
-				'type' => 'newsletter',
+				'type' => 'newsletters',
 			);
 
 			if($id = $this->_save_data($save_data))
@@ -149,23 +148,42 @@ class Newsletters extends MY_Admin_Controller
 	/**
 	 * Gets the content for the specified newsletter
 	 * @param  int $newsletter_id id of the newsletter from the url
-	 * @return [type]                [description]
+	 * 
 	 */
 	public function content($newsletter_id)
 	{
 		// Get the newsletter data	
+		if($parent = $this->newsletters_model->get_nl($newsletter_id))
+		{
+			$data['title'] = 'Manage content for '.$parent->title;
 
-		// Get the children of the newsletter
+			$children = $this->newsletters_model->get_children($parent->id);
+			$data['parent_id'] = $parent->id;
 
 			// Get the grandchildren
+			foreach ($children as $child) {
 
-			// Set them as a data type array
-			
-			
+				$clean_title = str_replace('-', '_', $child['friendly_title']);
+				$data[$clean_title] = $this->newsletters_model->get_children($child['id']);
+				$data[$clean_title.'_id'] = $child['id'];							
+			}
+
+		}
+		else
+		{
+			$data['error'] = 'No content retrieved';
+		}
+
+		$data['javascript'] = $this->load_js();
+
 		// Load the view
-		$this->load->view('admin/newsletters/content-manage', $data);
+		$this->load->view('admin/newsletters/newsletters-content', $data);
 	}
 
+	public function add_page()
+	{
+		$this->newsletters_model->add_child();
+	}
 
 	// -------------------------------------------------------------------------
 	//  PRIVATE HELPER FUNCTIONS

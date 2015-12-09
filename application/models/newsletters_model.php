@@ -73,7 +73,7 @@ class Newsletters_model Extends CI_Model{
 				'author' => $this->session->userdata('userid'),
 				'title' => 'Current Offers',
 				'friendly_title' => url_title('Current Offers', 'dash', TRUE),
-				'type' => 'offer',
+				'type' => 'offers',
 				'date_created' => date('Y-m-d H:m:s'),
 				'last_edited' => date('Y-m-d H:m:s')
 			),
@@ -81,7 +81,7 @@ class Newsletters_model Extends CI_Model{
 				'author' => $this->session->userdata('userid'),
 				'title' => 'Articles',
 				'friendly_title' => url_title('articles', 'dash', TRUE),
-				'type' => 'article',
+				'type' => 'articles',
 				'date_created' => date('Y-m-d H:m:s'),
 				'last_edited' => date('Y-m-d H:m:s')
 			)
@@ -121,6 +121,27 @@ class Newsletters_model Extends CI_Model{
 		$this->db->where('type', 'newsletter');
 		$this->db->from($this->newsletter_table);
 		return $this->db->count_all_results() + 1;
+	}
+
+	public function get_children($parent_id)
+	{
+			return $this->nested_set->getNodesWhere('parent_id = '.$parent_id);		
+	}
+
+	public function add_child()
+	{
+		$parent = $this->nested_set->getNodeWhere('id = 2');
+
+		$array = array(
+				'author' => $this->session->userdata('userid'),
+				'title' => 'New article',
+				'friendly_title' => url_title('New article', 'dash', TRUE),
+				'type' => 'offer',
+				'date_created' => date('Y-m-d H:m:s'),
+				'last_edited' => date('Y-m-d H:m:s')
+			);
+
+		$this->nested_set->insertNewChild($parent, $array);
 	}
 
 }
