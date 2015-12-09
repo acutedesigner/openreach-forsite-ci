@@ -545,7 +545,7 @@ class Content extends MY_Admin_Controller{
 			$this->MPTtree->move_node_after($node['lft'],$target['lft']);
 			break;
 		}
-		echo '{success: \'true\'}';
+		//echo '{success: \'true\'}';
 	}
 
 }

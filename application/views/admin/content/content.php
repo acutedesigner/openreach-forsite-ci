@@ -96,7 +96,7 @@ $('.status').click(function() {
 		type: 'POST',
 		data: form_data,
 		success: function(msg) {
-			window.location = '<?php echo current_url(); ?>';
+			//window.location = '<?php echo current_url(); ?>';
 		}
 	});
 

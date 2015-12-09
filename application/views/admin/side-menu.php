@@ -4,23 +4,9 @@
 		<li><?php echo anchor('admin/dashboard/', 'Home');?></li>
 		<li><h3 class="content">Website Content</h3></li>
 		<li>
-			<div class="menu-toggle">
-				<img class="drop" src="<?php echo base_url();?>css/images/img-dropdown.png" />
-			</div>			
-			<?php echo anchor('admin/archive/', 'Archives');?>
+			<?php echo anchor('admin/newsletters/', 'Newsletters');?>
 			<ul <?php if(isset($blog)): echo $blog; endif;?>>
-				<li><?php echo anchor('admin/archive/', 'View Archives'); ?></li>
-				<li><?php echo anchor('admin/archive/create/', 'Create new Archive'); ?></li>
-			</ul>
-		</li>		
-		<li>
-			<div class="menu-toggle">
-				<img class="drop" src="<?php echo base_url();?>css/images/img-dropdown.png" />
-			</div>			
-			<?php echo anchor('admin/content/tree/page/', 'Main Pages');?>
-			<ul <?php if(isset($page)): echo $page; endif;?>>
-				<li><?php echo anchor('admin/content/tree/page/', 'View website Pages'); ?></li>
-				<li><?php echo anchor('admin/content/create/page/', 'Create new Page'); ?></li>
+				<li><?php echo anchor('admin/archive/create/', 'Create new Newsletter'); ?></li>
 			</ul>
 		</li>		
 		<li>

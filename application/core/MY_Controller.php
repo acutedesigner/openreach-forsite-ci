@@ -126,11 +126,6 @@ class MY_Admin_Controller extends CI_Controller
 		parent::__construct();
 		$this->is_logged_in();
 		$this->get_edition_label();		
-
-		$this->load->model('MPTtree');
-
-		$this->MPTtree->set_table($this->current_content_table);
-		
 	}
 
 	function load_js()

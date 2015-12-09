@@ -5,7 +5,6 @@ class Login Extends CI_Controller{
 	// this will load the login form
 	function index()
 	{
-		echo "here";
 		$data['login_link'] = 'admin/login/login_user';
 		$data['title'] = 'Log in to the admin';
 		$this->load->view('admin/login/login_form', $data);	
