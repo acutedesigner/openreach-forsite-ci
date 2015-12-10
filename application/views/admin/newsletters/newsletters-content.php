@@ -10,17 +10,17 @@
 
 <!-- Display the stored data here -->
 
-<?php if(isset($articles)){ ?>
 <h2>Newsletter articles</h2>
 <?php echo anchor('admin/content/create/articles/'.$articles_id, 'Create new article', 'class="button positive"'); ?>
+<?php if(isset($articles)){ ?>
 <ul id="pagetree">
 <?php display_tree($articles, $parent_id); ?>
 </ul>
 <?php } ?>
 
-<?php if(isset($current_offers)){ ?>
 <h2>Current Offers</h2>
 <?php echo anchor('admin/content/create/offers/'.$current_offers_id, 'Create new offer', 'class="button positive"'); ?>
+<?php if(isset($current_offers)){ ?>
 <ul id="pagetree">
 <?php display_tree($current_offers, $parent_id); ?>
 </ul>
@@ -32,7 +32,7 @@
 		$root = NULL;
 		foreach($children as $child)
 		{
-			$no_nest = ($child['nested'] == 0 ? "no-nest" : false);
+			$no_nest = (isset($child['nested']) && $child['nested'] == 0 ? "no-nest" : false);
 			$root = ($child['lft'] == 1 ? "ignore" : false);
 			$folder = (isset($child['children']) && $child['type'] != "blog" ? "ofolder" : "folder");
 			$delete = anchor('admin/content/delete/'.$parent_id.'/'.$child['id'], '&nbsp;', 'class="delete"');

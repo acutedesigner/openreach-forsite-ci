@@ -29,8 +29,7 @@ class content_model Extends CI_Model{
 	}
 
 	public function insert_page($data)
-	{
-		
+	{		
 		$parent = $this->nested_set->getNodeWhere('id = '.$data['parent_id']);
 		$child = $this->nested_set->appendNewChild($parent,$data);	
 		if($child)
@@ -118,7 +117,6 @@ class content_model Extends CI_Model{
 
 	function get_sidebar($lft,$rgt,$current_content_table)
 	{
-
 		$this->db->select($current_content_table.'.id, title, friendly_title, content, status, '.$current_content_table.'.date_created, type, userid, users.firstname, users.lastname, gallery, header_image, lft, rgt, filename, ext, tag_name');
 		$this->db->where('lft >',$lft);
 		$this->db->where('rgt <',$rgt);

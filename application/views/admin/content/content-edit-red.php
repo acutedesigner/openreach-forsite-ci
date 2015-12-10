@@ -20,32 +20,23 @@
 		<textarea class="title" name="content" id="content"><?php if(isset($formdata)){ echo $formdata->content; } ?></textarea>
 	</p>
 
-<?php	
-	$options = array(
-                '2'	=>	'Draft',
-                '1'	=>	'Active',
-                '0'	=>	'De-activated',
-			);
-?>
-
-<?php $selected = NULL; if(isset($formdata) && isset($formdata->status)){ $selected = $formdata->status; } ?>
-
 	<p>
-		<label for="status">Content status</label>
-		<?php echo form_dropdown('status', $options, $selected); ?>
+		<label for="title">Select Header Image</label>
+		
+		<div class="select-header-image">
+			<?php if(isset($header_image)): echo $header_image; endif; ?>
+		</div>
+		<a id="select-image" class="button positive" href="#">Select image</a>
+		<input class="header_image" type="hidden" name="header_image" <?php if(isset($formdata)){ echo  'value="'.$formdata->header_image.'"'; } ?>
+ />
+
 	</p>
+
 
 <?php if(isset($tags)): ?>
 	<p>
 		<label for="title">Select Article Tag</label>
 		<?php echo form_dropdown('tag_id', $tags, $formdata->tag_id); ?>
-	</p>
-<?php endif; ?>
-
-<?php if(isset($headerimg)): ?>
-	<p>
-		<label for="title">Select Header Image</label>
-		<?php echo form_dropdown('header_image', $headerimg, $formdata->header_image); ?>
 	</p>
 <?php endif; ?>
 
@@ -89,7 +80,20 @@ tinymce.init({
 <script type="text/javascript">
 	$(function() {
 		$("#date_created").datepicker({ dateFormat: 'yy-mm-dd' });
+
+		$('#select-image').on('click', function(e){
+			e.preventDefault();
+			window.open("<?php echo site_url('admin/media/select/images'); ?>", "_blank", "width=680, height=680");
+		});
 	});
+
+	function updateImage(imageInfo)
+	{
+		$('.select-header-image').empty();
+		image = '<img src="'+imageInfo.imageLink+'" >';
+		$('.select-header-image').append(image);
+		$('.header_image').val(imageInfo.imageId);
+	}
 </script>      	
 
 <?php $this->load->view('admin/footer'); ?>

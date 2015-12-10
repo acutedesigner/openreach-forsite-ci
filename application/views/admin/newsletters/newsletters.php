@@ -23,11 +23,11 @@
 
 <?php foreach( $newsletters as $newsletter ): ?>
 		<tr>
-			<td><p><?php echo anchor('admin/newsletters/edit/'.$newsletter->id, $newsletter->title); ?></p></td>
+			<td><p><?php echo anchor('admin/newsletters/content/'.$newsletter->id, $newsletter->title); ?></p></td>
 			<?php $status = array( 'Deactivated','Active', 'Draft'); ?>
 			<td><p><?php echo $status[$newsletter->status]; ?></p></td>
-			<td><p><?php echo anchor('admin/newsletters/content/'.$newsletter->id, 'Manage content'); ?></p></td>
-			<td align="center" bgcolor="#FFFFFF"><input name="checkbox[]" type="checkbox" id="checkbox[]" value="<?php echo $newsletter->id; ?>" /></td>
+			<td><p><?php echo anchor('admin/newsletters/edit/'.$newsletter->id, 'Edit issue'); ?></p></td>
+			<td align="center" bgcolor="#FFFFFF"><?php echo anchor('admin/newsletters/delete/'.$newsletter->id, 'Delete'); ?></td>
 		</tr>
 <?php endforeach; ?>
 	</tbody>

@@ -49,7 +49,7 @@
 			</header>
 			<div class="header-band">
 				<div class="container">
-					NEWS AND VIEWS
+					News and views
 				</div>
 			</div>
 			<nav>
@@ -58,18 +58,36 @@
 					<ul>
 						<?php if(isset($news_menu)): ?>
 						<li <?php if(isset($link_newsletter)): echo 'class="current-menu-parent"'; endif; ?> >
-							<a href="<?php echo base_url(); ?>">Newsletter Articles</a>
+							<a href="<?php echo base_url(); ?>">Latest issue articles</a>
 							<ul>
-									<?php foreach ($news_menu as $result): ?>
-									
-										<li><a href="<?php echo base_url('issue-'.$issue).'/'.$result['type'].'/'.$result['friendly_title']; ?>"><?php echo $result['title']; ?></a></li>
+							<?php foreach ($news_menu as $key):?>
+								<?php foreach ($key['result_array'] as $article):?>
+									<li><a href="<?php echo base_url('issue-'.$key['issue']).'/'.$article['type'].'/'.$article['friendly_title']; ?>"><?php echo $article['title']; ?></a></li>
+								<?php endforeach; ?>
+							<?php endforeach; ?>
+							</ul>
 
+						</li>
+						<?php endif; ?>
+						<?php if(isset($previous_issues_menu)): ?>
+						<li>
+							<a href="#">Previous issues</a>
+							<ul>
+							<?php foreach ($previous_issues_menu as $key): ?>
+								<li>
+									<a href=""><?php echo $key['ancestor']['title']; ?></a>
+									<ul>
+									<?php foreach($key['articles'] as $article): ?>
+										<li><a href="<?php echo base_url('issue-'.$key['ancestor']['issue']).'/'.$article['type'].'/'.$article['friendly_title']; ?>"><?php echo $article['title']; ?></a></li>
 									<?php endforeach; ?>
+									</ul>
+								</li>
+
+							<?php endforeach; ?>
 							</ul>
 						</li>
 						<?php endif; ?>
 					</ul>
 				</div>
 			</nav>
-
 			<section class="container">

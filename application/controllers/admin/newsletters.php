@@ -143,6 +143,16 @@ class Newsletters extends MY_Admin_Controller
 	public function delete($newsletter_id)
 	{
 		// NOTE! need to ensure that this correct the whole tree on delete
+		if($this->newsletters_model->delete_nl($newsletter_id))
+		{
+		
+			// Set success Message
+			$this->message->set('success','Isssue deleted');
+
+			// Redirect the page
+			redirect('admin/newsletters');
+
+		}
 	}
 
 	/**
@@ -155,6 +165,7 @@ class Newsletters extends MY_Admin_Controller
 		// Get the newsletter data	
 		if($parent = $this->newsletters_model->get_nl($newsletter_id))
 		{
+			
 			$data['title'] = 'Manage content for '.$parent->title;
 
 			$children = $this->newsletters_model->get_children($parent->id);
@@ -206,6 +217,7 @@ class Newsletters extends MY_Admin_Controller
 
 			// We need to inform if the newsletter issue has not been updated
 			return ($this->newsletters_model->update_nl($save_data, $this->input->post('id')) ? $this->input->post('id') : FALSE);
+			
 		}
 		else
 		{
@@ -215,6 +227,8 @@ class Newsletters extends MY_Admin_Controller
 			$save_data['issue'] = $this->newsletters_model->count_nl();
 			$save_data['date_created'] = date('Y-m-d H:m:s');
 			$save_data['last_edited'] = date('Y-m-d H:m:s');
+
+			// We need to create new galleries
 		
 			// We are creating a NEW newsletter which returns the newsletter id
 			return $this->newsletters_model->create_new_nl($save_data);

@@ -173,7 +173,7 @@ class Gallery extends MY_Admin_Controller{
 
 			$this->load->model('gallery_model');
 
-			if($form = $this->gallery_model->delete_galleries($post, $this->current_lightbox_table))
+			if($form = $this->gallery_model->delete_galleries($post))
 			{
 				redirect('admin/gallery');
 			}

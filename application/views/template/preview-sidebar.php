@@ -8,7 +8,7 @@
 								<?php if(isset($article['filename'])): ?><img src="<?php echo base_url('media').'/'.$article['filename'].$article['ext']; ?>" alt="" ><?php endif; ?>
 
 							</div>						
-							<h3><a href="<?php echo base_url('archive/content/'.$edition_id).'/'.$article['friendly_title']; ?>"><?php echo $article['title']; ?></a></h3>
+							<h3><a href="<?php echo base_url('preview/issue-'.$issue).'/'.$article['friendly_title']; ?>"><?php echo $article['title']; ?></a></h3>
 						</div>	
 					
 						<?php endif; endforeach; ?>

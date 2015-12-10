@@ -82,7 +82,7 @@ caption {background:#eee;}
 .bottom {margin-bottom:0;padding-bottom:0;}
 
 /* forms.css */
-#container label {font-weight:bold; text-transform: uppercase; padding: 5px; color: #FFFFFF; background-color: #595959; display: block;}
+#container label {font-weight:bold; text-transform: uppercase; padding: 5px; color: #FFFFFF; background-color: #595959; display: block; clear: left;}
 #container fieldset {padding:0 1.4em 1.4em 1.4em;margin:0 0 1.5em 0;border:1px solid #ccc;}
 #container legend {font-weight:bold;font-size:1.2em;margin-top:-0.2em;margin-bottom:1em;}
 #container fieldset, #IE8#HACK {padding-top:1.4em;}

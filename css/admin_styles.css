@@ -391,6 +391,15 @@ html .cke_skin_kama{
 	background-color: #A10000;
 }
 
+/* Image Select
+-------------------------------------------------------------- */
+
+.main-image{
+	float: left;
+	width: 100%;
+	display: block;
+}
+
 
 /* Image Gallery
 -------------------------------------------------------------- */

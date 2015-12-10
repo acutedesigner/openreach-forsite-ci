@@ -43,11 +43,12 @@ $route['404_override'] = '';
 
 $route['admin'] = 'admin/login';
 
-$route['archive'] = 'archive/archive';
-$route['archive/login'] = 'archive/login';
-$route['archive/current-offers/(:any)'] = 'archive/archive/current_offers/$1';
-$route['archive/(:any)'] = 'archive/archive/$1';
-$route['archive/logout'] = 'archive/login/logout';
+$route['migration'] = 'migration';
+$route['preview'] = 'preview/preview';
+$route['preview/login'] = 'preview/login';
+$route['preview/(:any)'] = 'preview/preview/index/$1';
+$route['preview/logout'] = 'preview/login/logout';
+
 
 $route['media/(:any)'] = 'media/$1';
 

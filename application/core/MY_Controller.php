@@ -26,6 +26,11 @@ class MY_Controller extends CI_Controller
 		$this->usertracking->track_this();
 	}
 
+	public function printme($array)
+	{
+		echo '<pre>'; print_r($array); echo '</pre>';
+	}
+
 	function display_menu($array, $page_title = NULL)
 	{
 /*
@@ -82,23 +87,23 @@ class MY_Controller extends CI_Controller
 		}	
 	}
 
-	function get_edition_label()
-	{
-		$this->load->model('archive_model');
+	// function get_edition_label()
+	// {
+	// 	$this->load->model('archive_model');
 		
 
-		// Get the live version which = 2
-		if($result = $this->archive_model->get_active_label(1))
-		{
-			$this->edition_title = $result->edition_title;
-			$this->current_content_table = "ed_".$result->edition_label."_content";
-			$this->current_lightbox_table = "ed_".$result->edition_label."_lightbox";
-		}
-		else
-		{
-			return 'An edition of the Newsletter is not active!';
-		}
-	}
+	// 	// Get the live version which = 2
+	// 	if($result = $this->archive_model->get_active_label(1))
+	// 	{
+	// 		$this->edition_title = $result->edition_title;
+	// 		$this->current_content_table = "ed_".$result->edition_label."_content";
+	// 		$this->current_lightbox_table = "ed_".$result->edition_label."_lightbox";
+	// 	}
+	// 	else
+	// 	{
+	// 		return 'An edition of the Newsletter is not active!';
+	// 	}
+	// }
 
 }
 
@@ -119,7 +124,6 @@ class MY_Admin_Controller extends CI_Controller
 	{
 		parent::__construct();
 		$this->is_logged_in();
-		$this->get_edition_label();		
 	}
 
 	function load_js()
@@ -136,18 +140,18 @@ class MY_Admin_Controller extends CI_Controller
 		return $this->jload->generate();		
 	}
 
-	function get_edition_label()
-	{
-		$this->load->model('archive_model');
+	// function get_edition_label()
+	// {
+	// 	$this->load->model('archive_model');
 		
-		// Get the draft version which = 2
-		if($result = $this->archive_model->get_active_label(2))
-		{
-			$this->edition_title = $result->edition_title;
-			$this->current_content_table = "ed_".$result->edition_label."_content";
-			$this->current_lightbox_table = "ed_".$result->edition_label."_lightbox";
-		}
-	}
+	// 	// Get the draft version which = 2
+	// 	if($result = $this->archive_model->get_active_label(2))
+	// 	{
+	// 		$this->edition_title = $result->edition_title;
+	// 		$this->current_content_table = "ed_".$result->edition_label."_content";
+	// 		$this->current_lightbox_table = "ed_".$result->edition_label."_lightbox";
+	// 	}
+	// }
 	
 	function is_logged_in()
 	{

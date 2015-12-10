@@ -11,6 +11,8 @@ class Content extends MY_Controller {
 	
 	function index($issue = NULL)
 	{
+
+		$data['previous_issues_menu'] = $this->previous_issues_menu();
 	
 		if($issue == NULL)
 		{
@@ -35,12 +37,27 @@ class Content extends MY_Controller {
 
 			// get the first article / node from the articles
 			$first_article = $this->newsletters_model->get_first_child($data['articles_array']);
+
 			$data['page'] = $first_article;		
 			$data['title'] = $first_article->title;
 			$data['current_article'] = $first_article->id;				
 
 			//Get the menus
-			$data['news_menu'] = $data['sidebar_articles'];
+			$article_array = NULL;
+
+			foreach ($children as $child) {
+
+				$articles = $this->newsletters_model->get_sub_tree($child);
+				if(!empty($articles['result_array']))
+				{
+					$issue = $this->newsletters_model->get_ancestor($child);
+					$articles['issue'] = $issue['issue'];
+					$article_array[] = $articles;
+				}
+			}
+
+			//$this->printme($article_array);
+			$data['news_menu'] = $article_array;
 
 		}
 		else
@@ -68,12 +85,33 @@ class Content extends MY_Controller {
 
 			}
 
-			//Get the menus
-			$data['news_menu'] = $data['sidebar_articles'];
+			//Get the main menu - current issue
+
+			$parent = $this->newsletters_model->get_latest_nl();
+
+			$children = $this->newsletters_model->get_children($parent->id);
+
+			$article_array = NULL;
+
+			foreach ($children as $child) {
+
+				$articles = $this->newsletters_model->get_sub_tree($child);
+				if(!empty($articles['result_array']))
+				{
+					$issue = $this->newsletters_model->get_ancestor($child);
+					$articles['issue'] = $issue['issue'];
+					$article_array[] = $articles;
+				}
+			}
+
+			//$this->printme($article_array);
+			$data['news_menu'] = $article_array;
+
 
 			if($query = $this->content_model->get_page_title($this->uri->segment(3)))
 			{			
 				$data['current_article'] = $query->id;				
+				$data['title'] = $query->title;
 				$data['page'] = $query;
 			}
 			else
@@ -94,6 +132,25 @@ class Content extends MY_Controller {
 		$this->template->write_view('footer', 'template/footer', $data);
 		$this->template->render();
 			
+	}
+
+	public function previous_issues_menu()
+	{
+		if($results = $this->newsletters_model->previous_issues_menu())
+		{
+			$article = NULL;
+
+			foreach($results as $result)
+			{
+				$children = $this->newsletters_model->get_sub_tree($result);
+				$article[] = array(
+					'ancestor' => $this->newsletters_model->get_ancestor($result),
+					'articles' => $children['result_array']
+				);
+			}
+			// $this->printme($article);
+			return $article;	
+		}
 	}
 
 }

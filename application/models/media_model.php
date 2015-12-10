@@ -7,6 +7,7 @@ class media_model Extends CI_Model{
 		$this->db->select('*');
 		$this->db->from('media');
 		$this->db->where('filetype', $file_type);
+		$this->db->order_by('id', 'desc');
 		$this->db->limit($num, $offset);
 
 		$q = $this->db->get();

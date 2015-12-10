@@ -91,6 +91,7 @@ class Newsletters_model Extends CI_Model{
 				'title' => 'Current Offers',
 				'friendly_title' => url_title('Current Offers', 'dash', TRUE),
 				'type' => 'offers',
+				'status' => $post_data['status'],
 				'date_created' => date('Y-m-d H:m:s'),
 				'last_edited' => date('Y-m-d H:m:s')
 			),
@@ -99,6 +100,7 @@ class Newsletters_model Extends CI_Model{
 				'title' => 'Articles',
 				'friendly_title' => url_title('articles', 'dash', TRUE),
 				'type' => 'articles',
+				'status' => $post_data['status'],
 				'date_created' => date('Y-m-d H:m:s'),
 				'last_edited' => date('Y-m-d H:m:s')
 			)
@@ -125,6 +127,19 @@ class Newsletters_model Extends CI_Model{
 		
 		if($q)
 		{
+			// Update the statuses
+			$this->update_status($id, array( 'status' => $data['status']));
+			return true;
+		}
+	}
+
+	public function update_status($parent_id, $status)
+	{
+		$this->db->where('parent_id', $parent_id);
+		$q = $this->db->update($this->newsletter_table, $status);
+
+		if($q)
+		{
 			return true;
 		}
 	}
@@ -135,9 +150,11 @@ class Newsletters_model Extends CI_Model{
 	 */
 	public function count_nl()
 	{
-		$this->db->where('type', 'newsletter');
+		$this->db->where('type', 'newsletters');
 		$this->db->from($this->newsletter_table);
-		return $this->db->count_all_results() + 1;
+		$count = (int)$this->db->count_all_results();
+		print_r($count);
+		return  $count + 1;
 	}
 
 	public function get_issue($issue)
@@ -147,28 +164,94 @@ class Newsletters_model Extends CI_Model{
 
 	public function get_first_child($parent_node)
 	{
-		return (object)$this->nested_set->getFirstChild($parent_node);
+		// Also get the image!!
+		$first_child = $this->nested_set->getFirstChild($parent_node);
+
+		$this->db->select('filename, ext');
+		$this->db->from('media');
+		$this->db->where('id', $first_child['header_image']);
+		$q = $this->db->get();
+		if($q->num_rows() > 0)
+		{
+			return (object)array_merge($first_child, $q->row_array());
+		}
+		else
+		{
+			// No header image
+			return (object)$first_child;
+		}
 	}
 
 	public function get_children($parent_id)
 	{
-		return $this->nested_set->getNodesWhere('parent_id = '.$parent_id);		
+		//return $this->nested_set->getNodesWhere('parent_id = '.$parent_id);		
+
+		$this->db->select($this->newsletter_table.'.id, title, friendly_title, parent_id, nested, content, status, '.$this->newsletter_table.'.date_created, type, userid, users.firstname, users.lastname, gallery, header_image, lft, rgt, filename, ext, tag_name');
+		$this->db->from($this->newsletter_table);
+		$this->db->where('parent_id', $parent_id);
+		$this->db->join('users', 'userid = '.$this->newsletter_table.'.author', 'left');
+		$this->db->join('media', $this->newsletter_table.'.header_image = media.id', 'left');
+		$this->db->join('tags', $this->newsletter_table.'.tag_id = tags.id', 'left');
+
+		$q = $this->db->get();    	
+ 
+		if($q->num_rows() > 0)
+		{
+			return $q->result_array();
+		}
+
 	}
 
-	public function add_child()
+	public function get_section_children($parent_id, $section)
 	{
-		$parent = $this->nested_set->getNodeWhere('id = 2');
+		$this->db->select('id, title, status, issue, parent_id');
+        $this->db->from($this->newsletter_table);
+		$this->db->where('id', $parent_id);
+		$this->db->where('id', $id);
+		$q = $this->db->get();		
 
-		$array = array(
-				'author' => $this->session->userdata('userid'),
-				'title' => 'New article',
-				'friendly_title' => url_title('New article', 'dash', TRUE),
-				'type' => 'offer',
-				'date_created' => date('Y-m-d H:m:s'),
-				'last_edited' => date('Y-m-d H:m:s')
-			);
+		if($q->num_rows() == 1)
+		{
+			return $q->row();
+		}
 
-		$this->nested_set->insertNewChild($parent, $array);
 	}
 
+	public function previous_issues_menu()
+	{
+
+		$this->db->select('*');
+        $this->db->from($this->newsletter_table);
+		$this->db->where('type', 'articles');
+		$this->db->where('status', 1);
+		$this->db->order_by('id', 'desc');
+		$q = $this->db->get();		
+ 
+		if($q->num_rows() > 1)
+		{
+			// To remove the latest active newsletter
+			$input = $q->result_array();
+			$results = array_slice($input, 1);
+			return $results;
+		}
+
+	}
+
+	public function get_sub_tree($node)
+	{
+		return $this->nested_set->getTreePreorder($node, true);
+	}
+
+	public function get_ancestor($currnode)
+	{
+		return $this->nested_set->getAncestor($currnode);
+	}
+
+	public function delete_nl($newsletter_id)
+	{
+		// Get node
+		$node = $this->nested_set->getNodeWhere('id = "'.$newsletter_id.'"');
+		// delete tree
+		return $this->nested_set->deleteNode($node);
+	}
 }

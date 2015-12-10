@@ -66,30 +66,6 @@ class Content extends MY_Admin_Controller{
 			$data['tags'] = $tagarray;
 		}
 
-		// Get the header images gallery list
-		$this->load->model('gallery_model');
-		
-		if($header_images = $this->gallery_model->get_gallery_images(0,100,NULL,'header-images', $this->current_lightbox_table))
-		{
-			$images_array = array('' => 'Select One...');
-			
-			foreach($header_images as $image)
-			{
-				$images_array[$image->image_id] = $image->caption;
-			}
-									
-			// Set the galleries
-			$data['headerimg'] = $images_array;
-		}
-
-		// Load galleries
-		$this->load->model('gallery_model');
-
-		if($galleries = $this->gallery_model->get_galleries('',''))
-		{
-			$data['galleries'] = (object)$galleries;
-		}
-
 		// Load the js files
 		$data['javascript'] = $this->load_js();
 
@@ -117,6 +93,14 @@ class Content extends MY_Admin_Controller{
 				'formdata' => $form
 			);
 
+			// Get header image
+			if($form->header_image = 0)
+			{
+				$this->load->model('media_model');
+				$header_image = $this->media_model->get_file($form->header_image);
+				$data['header_image'] = '<img src="'.base_url().'media/'.$header_image->filename.'_150x150'.$header_image->ext.'" alt="'.$header_image->caption.'" />';
+			}
+			
 			// Get the tags list
 			$this->load->model('tags_model');
 			if($tags = $this->tags_model->retrieve())
@@ -132,32 +116,11 @@ class Content extends MY_Admin_Controller{
 				$data['tags'] = $tagarray;
 			}
 
-			// Get the header images gallery list
-			$this->load->model('gallery_model');
-			
-			if($header_images = $this->gallery_model->get_gallery_images(0,100,NULL,'header-images', $this->current_lightbox_table))
-			{
-				$images_array = array('' => 'Select One...');
-				
-				foreach($header_images as $image)
-				{
-					$images_array[$image->image_id] = $image->caption;
-				}
-										
-				// Set the galleries
-				$data['headerimg'] = $images_array;
-			}
-
 			// Load the js files
 			$data['javascript'] = $this->load_js();
 
 			// Load galleries
 			$this->load->model('gallery_model');
-
-			if($galleries = $this->gallery_model->get_galleries('',''))
-			{
-				$data['galleries'] = (object)$galleries;
-			}
 
 			// Set the users
 			$data['users'] = $users;
@@ -178,11 +141,6 @@ class Content extends MY_Admin_Controller{
 
 			// Load galleries
 			$this->load->model('gallery_model');
-
-			if($galleries = $this->gallery_model->get_galleries('',''))
-			{
-				$data['galleries'] = (object)$galleries;
-			}
 
 			// Set the users
 			$data['users'] = $users;
@@ -249,8 +207,6 @@ class Content extends MY_Admin_Controller{
 			$postdata = (object)$postdata;
 
 			$data['formdata'] = $postdata;
-
-			print_r($postdata);
 
 			// Load galleries
 			$this->load->model('gallery_model');

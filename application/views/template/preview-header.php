@@ -32,7 +32,7 @@
 						<img class="openreach-logo" src="<?php echo $this->template_url; ?>img/openreach-logo-header.jpg" srcset="<?php echo $this->template_url; ?>img/openreach-logo-header.jpg 1x, <?php echo $this->template_url; ?>img/openreach-logo-header-2x.jpg 2x" alt="Openreach Logo" ></li>
 						<li><div class="tab"><?php echo $edition_title; ?></div></li>
 					</ul>
-					<a href="<?php echo base_url(); ?>"><img class="brand-logo" src="<?php echo $this->template_url; ?>img/forsite-logo.jpg" srcset="<?php echo $this->template_url; ?>img/forsite-logo.jpg 1x, <?php echo $this->template_url; ?>img/forsite-logo@2x.jpg 2x" >
+					<a href="<?php echo base_url('preview'); ?>"><img class="brand-logo" src="<?php echo $this->template_url; ?>img/forsite-logo.jpg" srcset="<?php echo $this->template_url; ?>img/forsite-logo.jpg 1x, <?php echo $this->template_url; ?>img/forsite-logo@2x.jpg 2x" >
 </a>
 				</div>
 			</header>
@@ -46,25 +46,13 @@
 					<a class="to-main-nav" href="#main-nav">Menu <i class="fa fa-bars"></i></a>
 					<ul>
 						<?php if(isset($edition_menu)): ?>
-						<li><a href="<?php echo base_url('archive/logout') ?>">Logout</a></li>
+						<li><a href="<?php echo base_url('preview/logout') ?>">Logout</a></li>
 						<li>
-							<a href="<?php echo base_url('archive/'); ?>">Archive editions</a>
+							<a href="<?php echo base_url('preview/'); ?>">Draft issues</a>
 							<ul>
 									<?php foreach ($edition_menu as $result): ?>
 
-										<li><a href="<?php echo base_url('archive/content/'.$result->edition_id); ?>"><?php echo $result->edition_title; ?></a></li>
-
-									<?php endforeach; ?>
-							</ul>
-						</li>
-						<?php endif; ?>
-						<?php if(isset($news_menu)): ?>
-						<li <?php if(isset($link_newsletter)): echo 'class="current-menu-parent"'; endif; ?> >
-							<a href="<?php echo base_url('archive/'); ?>">Newsletter Articles</a>
-							<ul>
-									<?php foreach ($news_menu as $result): ?>
-
-										<li><a href="<?php echo base_url('archive/content/'.$edition_id.'/'.$result->friendly_title); ?>"><?php echo $result->title; ?></a></li>
+										<li><a href="<?php echo base_url('preview/issue-'.$result->issue); ?>"><?php echo $result->title; ?></a></li>
 
 									<?php endforeach; ?>
 							</ul>
