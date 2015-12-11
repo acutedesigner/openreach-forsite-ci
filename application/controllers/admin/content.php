@@ -94,7 +94,7 @@ class Content extends MY_Admin_Controller{
 			);
 
 			// Get header image
-			if($form->header_image != NULL)
+			if($form->header_image != 0)
 			{
 				$this->load->model('media_model');
 				$header_image = $this->media_model->get_file($form->header_image);
@@ -293,6 +293,7 @@ class Content extends MY_Admin_Controller{
 
 		if($this->input->post('id'))
 		{
+			$formdata['friendly_title'] = $this->_check_title($formdata['friendly_title'], $this->input->post('id'));
 			$formdata['last_edited'] = date('Y-m-d H:m:s');
 
 			// updating content
@@ -314,6 +315,8 @@ class Content extends MY_Admin_Controller{
 			$formdata['date_created'] = date('Y-m-d H:m:s');
 			$formdata['last_edited'] = date('Y-m-d H:m:s');
 
+			$formdata['friendly_title'] = $this->_check_title($formdata['friendly_title']);
+
 			if($new_content_id = $this->content_model->insert_page($formdata))
 			{
 			
@@ -333,16 +336,15 @@ class Content extends MY_Admin_Controller{
 		}		
 	}
 
-	public function check_title($title)
+	private function _check_title($title, $id = NULL)
 	{
 		// Check title does not exist
 		$this->load->model('content_model');
-		if($this->content_model->check_title($title))
+		if($count = $this->content_model->check_title($title, $id))
 		{
-			echo "Something found";
-			// If something found then we need to 
+			// If something found then we need to update the title url
+			$title = $title.'-'.($count+1);
 		}
-		//
 		return $title;
 	}
 

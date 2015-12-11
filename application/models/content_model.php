@@ -62,17 +62,27 @@ class content_model Extends CI_Model{
 
 	}
 
-	public function check_title($title)
+	public function check_title($title, $id = NULL)
 	{
 		$this->db->select('friendly_title');
 		$this->db->from($this->content_table);
 		$this->db->where('friendly_title', $title);
+		if($id != NULL)
+		{
+			$array = array($id);
+			$this->db->where_not_in('id', $array );
+		}
 		$q = $this->db->get();
 
 		if($q->num_rows() > 0)
 		{
 			//Count how many rows exist that have and appended number
-			return true;
+			$this->db->select('friendly_title');
+			$this->db->from($this->content_table);
+			$this->db->like('friendly_title', $title, 'after');
+			
+			$q = $this->db->get();
+			return $q->num_rows();
 		}
 	}
 
