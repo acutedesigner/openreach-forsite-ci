@@ -68,25 +68,27 @@ class media Extends CI_Controller{
 
 	function select($type)
 	{
+		
+		$data['action'] = $this->uri->segment(5);
 		// Select all from database where page type = $param
 		$this->load->model('media_model');
 
-		$rows = $this->db->query('SELECT * FROM media WHERE filetype = "'.$this->uri->segment(4).'" ');
+		$rows = $this->db->query('SELECT * FROM media WHERE filetype = "'.$type.'" ');
 
 		// load pagination class
     	$this->load->library('pagination');
-    	$config['base_url'] = base_url().'admin/media/select/'.$this->uri->segment(4);
+    	$config['base_url'] = base_url().'admin/media/select/'.$type.'/'.$this->uri->segment(5);
     	$config['total_rows'] = $rows->num_rows(); //$this->db->count_all('content');
     	$config['per_page'] = '8';
     	$config['full_tag_open'] = '<div id="pagination-links">';
     	$config['full_tag_close'] = '</div>';
 		$config['cur_tag_open'] = '<span class="active">';
 		$config['cur_tag_close'] = '</span>';
-		$config['uri_segment'] = 5;
+		$config['uri_segment'] = 6;
 
 		$this->pagination->initialize($config);
 				
-		if($query = $this->media_model->get_files($config['per_page'], $this->uri->segment(5), $type))
+		if($query = $this->media_model->get_files($config['per_page'], $this->uri->segment(6), $type))
 		{	
 			$data[$type] = $query;
 			$data['javascript'] = $this->jload->generate();

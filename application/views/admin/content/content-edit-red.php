@@ -67,6 +67,7 @@
 </div>
 
 <script type="text/javascript">
+
 tinymce.init({
     selector: "#content",
     plugins: [
@@ -74,8 +75,23 @@ tinymce.init({
         "searchreplace visualblocks code fullscreen",
         "insertdatetime media table contextmenu paste"
     ],
-    toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
+    convert_urls: false,
+    forced_root_block : false,
+    toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
+    file_browser_callback: function(field_name, url, type, win) { 
+
+        tinymce.activeEditor.windowManager.open({
+            title: "Select an image",
+            file: "<?php echo site_url('admin/media/select/images/insert'); ?>",
+            width: 680,
+            height: 680
+        }, {
+	        window 	: win,
+	        input 	: field_name
+	    });
+    }
 });
+
 </script>
 <script type="text/javascript">
 	$(function() {
@@ -83,7 +99,7 @@ tinymce.init({
 
 		$('#select-image').on('click', function(e){
 			e.preventDefault();
-			window.open("<?php echo site_url('admin/media/select/images'); ?>", "_blank", "width=680, height=680");
+			window.open("<?php echo site_url('admin/media/select/images/select'); ?>", "_blank", "width=680, height=680");
 		});
 	});
 

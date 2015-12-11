@@ -333,4 +333,17 @@ class Content extends MY_Admin_Controller{
 		}		
 	}
 
+	public function check_title($title)
+	{
+		// Check title does not exist
+		$this->load->model('content_model');
+		if($this->content_model->check_title($title))
+		{
+			echo "Something found";
+			// If something found then we need to 
+		}
+		//
+		return $title;
+	}
+
 }

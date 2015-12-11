@@ -62,6 +62,20 @@ class content_model Extends CI_Model{
 
 	}
 
+	public function check_title($title)
+	{
+		$this->db->select('friendly_title');
+		$this->db->from($this->content_table);
+		$this->db->where('friendly_title', $title);
+		$q = $this->db->get();
+
+		if($q->num_rows() > 0)
+		{
+			//Count how many rows exist that have and appended number
+			return true;
+		}
+	}
+
 /**--------------------------**/	
 
 	function get_content($num, $offset, $page_type, $current_content_table)
