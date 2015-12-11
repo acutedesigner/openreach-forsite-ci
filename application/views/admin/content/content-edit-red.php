@@ -24,7 +24,7 @@
 		<label for="title">Select Header Image</label>
 		
 		<div class="select-header-image">
-			<?php if(isset($header_image)): echo $header_image; endif; ?>
+			<?php if(isset($header_image)): echo $header_image; else: echo "none"; endif; ?>
 		</div>
 		<a id="select-image" class="button positive" href="#">Select image</a>
 		<input class="header_image" type="hidden" name="header_image" <?php if(isset($formdata)){ echo  'value="'.$formdata->header_image.'"'; } ?>

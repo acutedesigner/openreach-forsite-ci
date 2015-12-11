@@ -94,7 +94,7 @@ class Content extends MY_Admin_Controller{
 			);
 
 			// Get header image
-			if($form->header_image = 0)
+			if($form->header_image != NULL)
 			{
 				$this->load->model('media_model');
 				$header_image = $this->media_model->get_file($form->header_image);

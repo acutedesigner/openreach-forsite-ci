@@ -14,7 +14,6 @@ $(document).ready(function(){
 	   			imageId: $(this).data('image-id'),
 	   			imageLink: $(this).find('img').attr('src')
 	   		}
-	   		win.document.getElementById(field_name).value = image.imageLink;
 	   		window.opener.updateImage(image);
 	   		window.close();
 	   });
