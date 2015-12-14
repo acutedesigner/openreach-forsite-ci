@@ -338,6 +338,8 @@ class Content extends MY_Admin_Controller{
 
 	private function _check_title($title, $id = NULL)
 	{
+		
+		// !NOTE Check for if when a article is deleted sequence will be wrong
 		// Check title does not exist
 		$this->load->model('content_model');
 		if($count = $this->content_model->check_title($title, $id))

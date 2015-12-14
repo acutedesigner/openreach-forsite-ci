@@ -86,6 +86,13 @@ class content_model Extends CI_Model{
 		}
 	}
 
+	public function get_issue($issue_number){
+
+		// Get parent node where issue = $issue_number
+		return (object)$this->nested_set->getNodeWhere('issue = "'.$issue_number.'"');
+
+	}
+
 /**--------------------------**/	
 
 	function get_content($num, $offset, $page_type, $current_content_table)
@@ -107,22 +114,6 @@ class content_model Extends CI_Model{
 			return $data;
 		}
 	}
-
-	// function get_page($page_id, $current_content_table)
-	// {
-	// 	$this->db->select($current_content_table.'.id, title, content, tag_id, status, '.$current_content_table.'.date_created, type, userid, nested, users.firstname, users.lastname, name, gallery, header_image, lft');
-	// 	$this->db->from($current_content_table);
-	// 	$this->db->where($current_content_table.'.id', $page_id);
-	// 	$this->db->join('users', 'userid = '.$current_content_table.'.author', 'left');
-	// 	$this->db->join('galleries', 'galleries.id = '.$current_content_table.'.gallery', 'left');
-
-	// 	$q = $this->db->get();	
-
-	// 	if($q->num_rows() > 0)
-	// 	{
-	// 		return $q->row();
-	// 	}
-	// }
 
 	function get_home($current_content_table)
 	{
@@ -177,12 +168,7 @@ class content_model Extends CI_Model{
 
 	//function get_page_title($page_title, $new_table = NULL, $current_content_table)
 	function get_page_title($page_title)
-	{
-		// if($new_table != NULL)
-		// {
-		// 	$current_content_table = $new_table;	
-		// }
-		
+	{	
 		$this->db->select($this->content_table.'.id, title, friendly_title, content, status, '.$this->content_table.'.date_created, type, userid, users.firstname, users.lastname, gallery, header_image, lft, rgt, filename, ext, tag_name');
 		$this->db->from($this->content_table);
 		$this->db->where('friendly_title', $page_title);
@@ -198,23 +184,8 @@ class content_model Extends CI_Model{
 			return $q->row();
 		}
 	}
-	
+		
 
-	
-	function delete_pages($data)
-	{
-		foreach ($data as $id)
-		{
-			$this->MPTtree->delete_node($id);
-		}		
-		return true;
-	}
-
-	// function delete_page($id)
-	// {
-	// 	$this->MPTtree->delete_node($id);
-	// 	return true;
- // 	}	
 	
 	function status_update($data, $id, $current_content_table)
 	{

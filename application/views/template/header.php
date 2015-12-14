@@ -41,7 +41,7 @@
 					<ul>
 						<li>
 						<a href="http://www.openreach.co.uk" target="_blank"><img class="openreach-logo" src="<?php echo $this->template_url; ?>img/openreach-logo-header.jpg" srcset="<?php echo $this->template_url; ?>img/openreach-logo-header.jpg 1x, <?php echo $this->template_url; ?>img/openreach-logo-header-2x.jpg 2x" alt="Openreach Logo" ></a></li>
-						<li><div class="tab"><?php echo date('F'); ?> 2015</div></li>
+						<li><div class="tab"><?php echo $edition_title ?></div></li>
 					</ul>
 					<a href="<?php echo base_url(); ?>"><img class="brand-logo" src="<?php echo $this->template_url; ?>img/forsite-logo.jpg" srcset="<?php echo $this->template_url; ?>img/forsite-logo.jpg 1x, <?php echo $this->template_url; ?>img/forsite-logo@2x.jpg 2x" >
 </a>
@@ -75,7 +75,7 @@
 							<ul>
 							<?php foreach ($previous_issues_menu as $key): ?>
 								<li>
-									<a href=""><?php echo $key['ancestor']['title']; ?></a>
+									<a href="<?php echo base_url('issue-'.$key['ancestor']['issue'])?>"><?php echo $key['ancestor']['title']; ?></a>
 									<ul>
 									<?php foreach($key['articles'] as $article): ?>
 										<li><a href="<?php echo base_url('issue-'.$key['ancestor']['issue']).'/'.$article['type'].'/'.$article['friendly_title']; ?>"><?php echo $article['title']; ?></a></li>
