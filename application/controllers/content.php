@@ -9,7 +9,7 @@ class Content extends MY_Controller {
 		$this->load->model('newsletters_model');
 	}
 	
-	function index($issue = NULL)
+	function index($issue = NULL, $content_type = NULL, $article_title = NULL)
 	{
 
 		$data['previous_issues_menu'] = $this->previous_issues_menu();
@@ -108,9 +108,9 @@ class Content extends MY_Controller {
 			//$this->printme($article_array);
 			$data['news_menu'] = $article_array;
 
-			if($this->uri->segment(2))
+			if($article_title != NULL)
 			{
-				$query = $this->content_model->get_page_title($this->uri->segment(2));
+				$query = $this->content_model->get_page_title($article_title);
 			}
 			else
 			{

@@ -11,7 +11,7 @@
 <!-- Display the stored data here -->
 
 <h2>Newsletter articles</h2>
-<?php echo anchor('admin/content/create/articles/'.$articles_id, 'Create new article', 'class="button positive"'); ?>
+<?php echo anchor('admin/content/create/article/'.$articles_id, 'Create new article', 'class="button positive"'); ?>
 <?php if(isset($articles)){ ?>
 <ul id="pagetree">
 <?php display_tree($articles, $parent_id); ?>
