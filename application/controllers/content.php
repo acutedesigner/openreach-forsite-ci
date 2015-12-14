@@ -108,16 +108,18 @@ class Content extends MY_Controller {
 			//$this->printme($article_array);
 			$data['news_menu'] = $article_array;
 
-			if($this->uri->segment(3))
+			if($this->uri->segment(2))
 			{
-				$query = $this->content_model->get_page_title($this->uri->segment(3));
+				$query = $this->content_model->get_page_title($this->uri->segment(2));
 			}
 			else
 			{
-				if($query != $this->content_model->get_issue($issue_number))
+				$query = $this->content_model->get_issue($issue_number);
+				$tmp = (array) $query;
+				if(empty($tmp))
 				{
 					redirect('/');
-				}				
+				}
 			}
 
 			$data['current_article'] = $query->id;				
