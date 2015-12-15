@@ -51,14 +51,14 @@ class Newsletters_model Extends CI_Model{
 
 		if($q->num_rows() == 1)
 		{
-			return $q->row();
+			return $q->row_object();
 		}
 
 	}
 
 	public function get_latest_nl()
 	{
-		$this->db->select('id, title, status, issue');
+		$this->db->select('id, title, status, issue, lft, rgt');
         $this->db->from($this->newsletter_table);
 		$this->db->where('type', 'newsletters');
 		$this->db->where('status', 1);
@@ -68,7 +68,7 @@ class Newsletters_model Extends CI_Model{
  
 		if($q->num_rows() == 1)
 		{
-			return $q->row();
+			return $q->row_object();
 		}
 
 	}
@@ -153,13 +153,15 @@ class Newsletters_model Extends CI_Model{
 		$this->db->where('type', 'newsletters');
 		$this->db->from($this->newsletter_table);
 		$count = (int)$this->db->count_all_results();
-		print_r($count);
 		return  $count + 1;
 	}
 
 	public function get_issue($issue)
 	{
-		return $this->nested_set->getNodeWhere('issue = '.$issue);				
+		if(count($this->nested_set->getNodeWhere('issue = '.$issue)) > 0)
+		{
+			return (object)$this->nested_set->getNodeWhere('issue = '.$issue);
+		}				
 	}
 
 	public function get_first_child($parent_node)

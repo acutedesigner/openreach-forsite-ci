@@ -56,14 +56,12 @@
 				<div class="menu-container">
 					<a class="to-main-nav" href="#main-nav">Menu <i class="fa fa-bars"></i></a>
 					<ul>
-						<?php if(isset($news_menu)): ?>
+						<?php if(isset($articles_array)): ?>
 						<li <?php if(isset($link_newsletter)): echo 'class="current-menu-parent"'; endif; ?> >
 							<a href="<?php echo base_url(); ?>">Latest issue articles</a>
 							<ul>
-							<?php foreach ($news_menu as $key):?>
-								<?php foreach ($key['result_array'] as $article):?>
-									<li><a href="<?php echo base_url('issue-'.$key['issue']).'/'.$article['type'].'/'.$article['friendly_title']; ?>"><?php echo $article['title']; ?></a></li>
-								<?php endforeach; ?>
+							<?php foreach ($articles_array as $article): ?>
+									<li><a href="<?php echo base_url('issue-'.$latest_issue->scalar).'/'.$article['type'].'/'.$article['friendly_title']; ?>"><?php echo $article['title']; ?></a></li>
 							<?php endforeach; ?>
 							</ul>
 

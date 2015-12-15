@@ -8,139 +8,148 @@ class Content extends MY_Controller {
 		$this->load->model('content_model');
 		$this->load->model('newsletters_model');
 	}
-	
+
+
+	/**
+	 * index   Generates the content and menus to be displayed on the page
+	 * @param  string $issue         The current issue being requested
+	 * @param  string $content_type  The type of content being requested
+	 * @param  string $article_title The title of article being 
+	 * @return Content returned to the template generator
+	 */
 	function index($issue = NULL, $content_type = NULL, $article_title = NULL)
 	{
 
-		$data['previous_issues_menu'] = $this->previous_issues_menu();
-	
-		if($issue == NULL)
-		{
+		$latest_issue_data = $this->newsletters_model->get_latest_nl();
 
-			$parent = $this->newsletters_model->get_latest_nl();
-			$data['issue'] = $parent->issue;
-			$data['edition_title'] = $parent->title;
-
-			$children = $this->newsletters_model->get_children($parent->id);
-
-			// Extract the sections Articles | Current Offers
-			foreach ($children as $child) {
-
-				$clean_title = str_replace('-', '_', $child['friendly_title']);
-
-				// For sidebar menus
-				$data['sidebar_'.$clean_title] = $this->newsletters_model->get_children($child['id']);
-
-				// Full array
-				$data[$clean_title.'_array'] = $child;							
-
-			}
-
-			// get the first article / node from the articles
-			$first_article = $this->newsletters_model->get_first_child($data['articles_array']);
-
-			$data['page'] = $first_article;		
-			$data['title'] = $first_article->title;
-			$data['current_article'] = $first_article->id;				
-
-			//Get the menus
-			$article_array = NULL;
-
-			foreach ($children as $child) {
-
-				$articles = $this->newsletters_model->get_sub_tree($child);
-				if(!empty($articles['result_array']))
-				{
-					$issue = $this->newsletters_model->get_ancestor($child);
-					$articles['issue'] = $issue['issue'];
-					$article_array[] = $articles;
-				}
-			}
-
-			$data['news_menu'] = $article_array;
-
-		}
-		else
+		// We need to validate $issue
+		if($issue != NULL && preg_match('/^issue\-[0-9]+$/', $issue))
 		{
 
 			$issue = explode("-", $issue);
-			$issue_number = $issue[1];
+			$issue_number = $issue[1];	
+			$issue_data = $this->newsletters_model->get_issue($issue_number);
 
-			//get node where issue = $issue_number
-			$parent = $this->newsletters_model->get_issue($issue_number);
-			$data['edition_title'] = $parent['title'];
-			$data['issue'] = $parent['issue'];
-
-			$children = $this->newsletters_model->get_children($parent['id']);
-
-			// Extract the sections Articles | Current Offers
-			foreach ($children as $child) {
-
-				$clean_title = str_replace('-', '_', $child['friendly_title']);
-
-				// For sidebar menus
-				$data['sidebar_'.$clean_title] = (object)$this->newsletters_model->get_children($child['id']);
-
-				// Full array
-				$data[$clean_title.'_array'] = $child;							
-
-			}
-
-			//Get the main menu - current issue
-
-			$parent = $this->newsletters_model->get_latest_nl();
-
-			$children = $this->newsletters_model->get_children($parent->id);
-
-			$article_array = NULL;
-
-			foreach ($children as $child) {
-
-				$articles = $this->newsletters_model->get_sub_tree($child);
-				if(!empty($articles['result_array']))
-				{
-					$issue = $this->newsletters_model->get_ancestor($child);
-					$articles['issue'] = $issue['issue'];
-					$article_array[] = $articles;
-				}
-			}
-
-			//$this->printme($article_array);
-			$data['news_menu'] = $article_array;
-
-			if($article_title != NULL)
+			if($issue_data && $article_title != NULL)
 			{
-				$query = $this->content_model->get_page_title($article_title);
+				$article_data = $this->content_model->get_page_title($article_title);
+			}
+			elseif($issue_data)
+			{
+				$section_data = $this->newsletters_model->get_first_child((array)$issue_data);
+				$article_data = $this->newsletters_model->get_first_child((array)$section_data);
 			}
 			else
 			{
-				$query = $this->content_model->get_issue($issue_number);
-				$tmp = (array) $query;
-				if(empty($tmp))
-				{
-					redirect('/');
-				}
+				redirect('/');
 			}
+		}
+		else
+		{
+			$issue_data = $latest_issue_data;
+			$section_data = $this->newsletters_model->get_first_child((array)$issue_data);
+			$article_data = $this->newsletters_model->get_first_child((array)$section_data);
+		}
 
-			$data['current_article'] = $query->id;				
-			$data['title'] = $query->title;
-			$data['page'] = $query;
+		$get_sidebar_menu = $this->get_sidebar_menu($issue_data->id);
 
-		}			
+		foreach ($get_sidebar_menu as $key => $value) {
+			$data[$key] = (object)$value;
+		}
 
-		// get the promos
-		$this->load->model('promos_model');
-		$data['promos'] = $this->promos_model->display_promos(); 
-		$data['link_newsletter'] = 0;		
+		$get_latest_issue_menu = $this->get_latest_issue_menu($latest_issue_data->id);
 
+		foreach ($get_latest_issue_menu as $key => $value) {
+			$data[$key] = (object)$value;
+		}
+
+		//	Return Data
+		//	==================================
+
+		$data['edition_title'] = $issue_data->title;
+		$data['issue'] = $issue_data->issue;
+		$data['previous_issues_menu'] = $this->previous_issues_menu();
+
+		// Article elements
+		$data['page'] = $article_data;		
+		$data['title'] = $article_data->title;
+		$data['current_article'] = $article_data->id;				
+
+		// Render the page
 		$this->template->write_view('header', 'template/header', $data);
 		$this->template->write_view('content', 'template/index', $data);
 		$this->template->write_view('sidebar', 'template/sidebar', $data);
 		$this->template->write_view('footer', 'template/footer', $data);
 		$this->template->render();
-			
+
 	}
 
+
+	/**
+	 * get_latest_issue_menu	Gets a list of articles for most recent issue
+	 * @param  int $issue_id    The id of the current issue being displayed
+	 * @return object           Array of menu items
+	 */
+	public function get_latest_issue_menu($issue_id)
+	{
+		// Get the children articles of the issue being called		
+		$issue_children = $this->newsletters_model->get_children($issue_id);
+
+		// The varable that will be returned
+		$newsletter_sections = NULL;
+
+		// Extract the sections Articles | Current Offers | Previous issues
+		foreach ($issue_children as $child) {
+
+			$clean_title = str_replace('-', '_', $child['friendly_title']);
+
+			// Full array
+			$newsletter_sections[$clean_title.'_array'] = $child;
+
+			// Build the menu array for latest issue
+			$section = $this->newsletters_model->get_sub_tree($child);
+
+			//$this->printme($child);						
+			if(!empty($section['result_array']))
+			{
+				// Issue data merged with section
+				$issue = $this->newsletters_model->get_ancestor($child);
+				$newsletter_sections['articles_array'] = $section['result_array'];
+				$newsletter_sections['latest_issue'] = $issue['issue'];
+			}
+		}		
+		return $newsletter_sections;
+	}
+
+	/**
+	 * get_sidebar_menu			Gets a list of the displayed issues articles
+	 * @param  int $issue_id    The id of the current issue being displayed
+	 * @return object           Array of menu items
+	 */
+	public function get_sidebar_menu($issue_id)
+	{
+		// Get the children articles of the issue being called		
+		$issue_children = $this->newsletters_model->get_children($issue_id);
+
+		// The varable that will be returned
+		$newsletter_sections = NULL;
+
+		// Extract the sections Articles | Current Offers | Previous issues
+		foreach ($issue_children as $child) {
+
+			$clean_title = str_replace('-', '_', $child['friendly_title']);
+
+			// For sidebar menus
+			$newsletter_sections['sidebar_'.$clean_title] = $this->newsletters_model->get_children($child['id']);
+
+		}
+		return $newsletter_sections;
+	}
+
+	/**
+	 * previous_issues_menu get a list of all previous newsletter articles
+	 * @return object returns object tree
+	 */
 	public function previous_issues_menu()
 	{
 		if($results = $this->newsletters_model->previous_issues_menu())
