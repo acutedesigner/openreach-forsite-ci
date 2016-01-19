@@ -22,7 +22,7 @@
 				</ul>				
 			</div>
 			<div class="container copyright">
-				<p>&copy; British Telecommunications plc 2015. All rights reserved.</p>
+				<p>&copy; British Telecommunications plc <?php echo date('YY'); ?>. All rights reserved.</p>
 			</div>
 		</footer>
 	
