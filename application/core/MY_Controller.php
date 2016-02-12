@@ -2,7 +2,7 @@
 
 class MY_Controller extends CI_Controller
 {
-	
+
 	var $menu;
 	var $template_url;
 
@@ -13,9 +13,9 @@ class MY_Controller extends CI_Controller
 	function __construct()
 	{
 		parent::__construct();
-		
+
 		$this->load->helper('text');
-		
+
 
 		$this->template->add_css('template_assets/css/main.css', 'link');
 		$this->template->add_js('template_assets/js/vendor/modernizr-2.8.3.min.js', 'import');
@@ -38,13 +38,13 @@ class MY_Controller extends CI_Controller
 		{
 			return FALSE;
 		}
-		
+
 		$i = 0;
 		foreach($array as $child)
 		{
 				$children = (isset($child['children']) && $child['type'] != "blog" ? "has-flyout" : false); // returns true
 				$active = ($child['friendly_title'] == $page_title ? "current-menu-parent" : false);
-				
+
 				$this->menu .= "<li class=\"$children\">".anchor($child['friendly_title'], $child['title'], array('class' => $active));
 				if(isset($child['children']) && $child['type'] != "blog")
 				{
@@ -58,7 +58,7 @@ class MY_Controller extends CI_Controller
 		return $this->menu;
 */
 	}
-	
+
 	function gallery_widget($number)
 	{
 		$this->load->model('gallery_model');
@@ -68,11 +68,11 @@ class MY_Controller extends CI_Controller
 			return $query;
 		}
 	}
-	
+
 	function breadcrumbs($parents)
 	{
 		$breadcrumbs = array();
-			
+
 		foreach($parents as $parent)
 		{
 			if($parent['lft'] != 1)
@@ -80,17 +80,17 @@ class MY_Controller extends CI_Controller
 				array_push($breadcrumbs, $parent);
 			}
 		}
-						
+
 		if(count($breadcrumbs) != 0)
 		{
 			return $breadcrumbs;
-		}	
+		}
 	}
 
 	// function get_edition_label()
 	// {
 	// 	$this->load->model('archive_model');
-		
+
 
 	// 	// Get the live version which = 2
 	// 	if($result = $this->archive_model->get_active_label(1))
@@ -112,7 +112,7 @@ class MY_Controller extends CI_Controller
 	 * MY_Admin_Controller is for the admin area only
 	 *
 	 */
- 
+
 class MY_Admin_Controller extends CI_Controller
 {
 
@@ -129,7 +129,7 @@ class MY_Admin_Controller extends CI_Controller
 	function load_js()
 	{
 		// Add Javascript files
-		$this->jload->add('jquery-1.8.3.min.js');
+		$this->jload->add('jquery-1.6.2.min.js');
 		$this->jload->add('jquery-ui-1.8.2.custom.min.js');
 		$this->jload->add('menu.js');
 		$this->jload->add('tinymce/tinymce.min.js');
@@ -137,13 +137,13 @@ class MY_Admin_Controller extends CI_Controller
 		$this->jload->add('jConfirmAction/jconfirmaction.jquery.js');
 		$this->jload->add('cms_tree.js');
 
-		return $this->jload->generate();		
+		return $this->jload->generate();
 	}
 
 	// function get_edition_label()
 	// {
 	// 	$this->load->model('archive_model');
-		
+
 	// 	// Get the draft version which = 2
 	// 	if($result = $this->archive_model->get_active_label(2))
 	// 	{
@@ -152,7 +152,7 @@ class MY_Admin_Controller extends CI_Controller
 	// 		$this->current_lightbox_table = "ed_".$result->edition_label."_lightbox";
 	// 	}
 	// }
-	
+
 	function is_logged_in()
 	{
 		$is_logged_in = $this->session->userdata('is_logged_in');
