@@ -194,6 +194,7 @@ class Newsletters_model Extends CI_Model{
 		$this->db->join('users', 'userid = '.$this->newsletter_table.'.author', 'left');
 		$this->db->join('media', $this->newsletter_table.'.header_image = media.id', 'left');
 		$this->db->join('tags', $this->newsletter_table.'.tag_id = tags.id', 'left');
+		$this->db->order_by('lft', 'asc');
 
 		$q = $this->db->get();    	
  
@@ -255,5 +256,30 @@ class Newsletters_model Extends CI_Model{
 		$node = $this->nested_set->getNodeWhere('id = "'.$newsletter_id.'"');
 		// delete tree
 		return $this->nested_set->deleteNode($node);
+	}
+
+	public function move_node($data)
+	{
+	
+		// First we get the node and target node objects
+		$node = $this->nested_set->getNodeWhere('id = "'.$data['node'].'"'); 
+		$target = $this->nested_set->getNodeWhere('id = "'.$data['node_target'].'"');
+
+		// then based on the method param in the data array run that method
+		if('next' == $data['method'])
+		{
+			return $this->nested_set->setNodeAsNextSibling($node, $target);
+		}
+
+		if('prev' == $data['method'])
+		{
+			return $this->nested_set->setNodeAsPrevSibling($node, $target);
+		}
+	
+	}
+
+	public function show_tree()
+	{
+		echo $this->nested_set->getTreeAsHTML(array('title', 'lft', 'rgt'));
 	}
 }

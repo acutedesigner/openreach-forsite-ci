@@ -196,6 +196,21 @@ class Newsletters extends MY_Admin_Controller
 		$this->newsletters_model->add_child();
 	}
 
+	public function move_node()
+	{
+		
+		if($this->newsletters_model->move_node($this->input->post()))
+		{
+			echo '{success: \'true\'}';
+		}
+
+	}
+
+	public function show_tree()
+	{
+		$this->newsletters_model->show_tree();
+	}
+
 	// -------------------------------------------------------------------------
 	//  PRIVATE HELPER FUNCTIONS
 	//

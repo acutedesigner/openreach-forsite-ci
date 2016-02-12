@@ -33,11 +33,11 @@
 		foreach($children as $child)
 		{
 			$no_nest = (isset($child['nested']) && $child['nested'] == 0 ? "no-nest" : false);
-			$root = ($child['lft'] == 1 ? "ignore" : false);
+			$root = ($child['id'] == 1 ? "ignore" : false);
 			$folder = (isset($child['children']) && $child['type'] != "blog" ? "ofolder" : "folder");
 			$delete = anchor('admin/content/delete/'.$parent_id.'/'.$child['id'], '&nbsp;', 'class="delete"');
 
-			echo "<li class=\"$root $no_nest\" id=\"".$child['lft']."\">\n";
+			echo "<li class=\"$root $no_nest\" id=\"".$child['id']."\">\n";
 			echo "<div class=\"item\">".$delete."<img src='".base_url()."css/images/img-page-".$folder.".png' class='folder' />".anchor('admin/content/edit/'.$child['type'].'/'.$child['parent_id'].'/'.$child['id'], $child['title'])."</div>";
 			if(isset($child['children']) && $child['type'] != "blog")
 			{
@@ -75,7 +75,7 @@ $('.status').click(function() {
 });
 
 var siteurl = '<?php echo current_url(); ?>';
-var methodurl = '<?php echo site_url('/admin/content/move_node');?>';
+var methodurl = '<?php echo site_url('/admin/newsletters/move_node');?>';
 </script>
 
 <script type="text/javascript">
