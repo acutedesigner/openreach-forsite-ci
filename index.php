@@ -18,7 +18,7 @@
  * NOTE: If you change these, also change the error_reporting() code below
  *
  */
-	if ($_SERVER['SERVER_NAME'] == 'php-lamp-104185.nitrousapp.com') {
+	if ($_SERVER['SERVER_NAME'] == 'acumen-development-projects-144872.nitrousapp.com') {
 	    define('ENVIRONMENT', 'development');
 	} else {
 	    define('ENVIRONMENT', 'production');
@@ -39,7 +39,7 @@ if (defined('ENVIRONMENT'))
 		case 'development':
 			error_reporting(E_ALL);
 		break;
-	
+
 		case 'testing':
 		case 'production':
 			error_reporting(0);
