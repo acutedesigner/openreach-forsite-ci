@@ -22,7 +22,7 @@
 
 	<p>
 		<label for="title">Select Header Image</label>
-		
+
 		<div class="select-header-image">
 			<?php if(isset($header_image)): echo $header_image; endif; ?>
 		</div>
@@ -78,7 +78,7 @@ tinymce.init({
     convert_urls: false,
     forced_root_block : false,
     toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
-    file_browser_callback: function(field_name, url, type, win) { 
+    file_browser_callback: function(field_name, url, type, win) {
 
         tinymce.activeEditor.windowManager.open({
             title: "Select an image",
@@ -94,13 +94,14 @@ tinymce.init({
 
 </script>
 <script type="text/javascript">
-	$(function() {
+	$(document).ready(function(){
 		$("#date_created").datepicker({ dateFormat: 'yy-mm-dd' });
 
-		$('#select-image').on('click', function(e){
+		$('#select-image').click(function(e){
 			e.preventDefault();
 			window.open("<?php echo site_url('admin/media/select/images/select'); ?>", "_blank", "width=680, height=680");
 		});
+
 	});
 
 	function updateImage(imageInfo)
@@ -110,6 +111,6 @@ tinymce.init({
 		$('.select-header-image').append(image);
 		$('.header_image').val(imageInfo.imageId);
 	}
-</script>      	
+</script>
 
 <?php $this->load->view('admin/footer'); ?>
